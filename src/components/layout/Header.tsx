@@ -8,14 +8,14 @@ export function Header() {
 
   return (
     <header className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">🍽️</span>
-          <h1 className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-xl font-bold text-transparent">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:px-4">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="shrink-0 text-2xl">🍽️</span>
+          <h1 className="truncate bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-lg font-bold text-transparent sm:text-xl">
             {t('app.title')}
           </h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <div className="flex items-center rounded-full border border-gray-200 p-0.5 dark:border-gray-700">
             <button
               onClick={() => i18n.changeLanguage('nl')}
