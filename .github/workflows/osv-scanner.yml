@@ -15,7 +15,7 @@ permissions: {}
 jobs:
   scan-pr:
     permissions:
-      actions: read
-      security-events: write
-      contents: read
+      actions: read            # Required to read workflow run info
+      security-events: write   # Required to upload SARIF results
+      contents: read           # Required for actions/checkout
     uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@2a387edfbe02a11d856b89172f6e978100177eb4" # v2.3.2
