@@ -43,8 +43,11 @@ export function MapPage() {
         </div>
       )}
 
-      <div className="flex gap-4">
-        <div className="flex-1 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700" style={{ height: '60vh' }}>
+      <div className="flex flex-col gap-4 lg:flex-row">
+        <div
+          className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 lg:flex-1"
+          style={{ height: 'calc(100dvh - 200px)', minHeight: '360px' }}
+        >
           <DinnerMap
             participants={participants}
             schedule={schedule}
@@ -52,23 +55,21 @@ export function MapPage() {
           />
         </div>
 
-        <div className="w-36 shrink-0">
-          <h3 className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 lg:w-36 lg:flex-col lg:flex-nowrap lg:gap-2">
+          <h3 className="w-full text-sm font-medium text-gray-700 dark:text-gray-300">
             {t('map.legend')}
           </h3>
-          <ul className="space-y-2">
-            {[
-              { color: 'bg-green-500', label: t('map.starter') },
-              { color: 'bg-orange-500', label: t('map.main') },
-              { color: 'bg-violet-500', label: t('map.dessert') },
-              { color: 'bg-gray-400', label: 'Guest' },
-            ].map(({ color, label }) => (
-              <li key={label} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <span className={`h-3 w-3 rounded-full ${color}`} />
-                {label}
-              </li>
-            ))}
-          </ul>
+          {[
+            { color: 'bg-green-500', label: t('map.starter') },
+            { color: 'bg-orange-500', label: t('map.main') },
+            { color: 'bg-violet-500', label: t('map.dessert') },
+            { color: 'bg-gray-400', label: 'Guest' },
+          ].map(({ color, label }) => (
+            <div key={label} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <span className={`h-3 w-3 shrink-0 rounded-full ${color}`} />
+              {label}
+            </div>
+          ))}
         </div>
       </div>
     </div>

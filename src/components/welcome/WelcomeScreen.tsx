@@ -25,38 +25,8 @@ export function WelcomeScreen({ onStartManual, onStartTestData }: WelcomeScreenP
   return (
     <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-gradient-to-br from-orange-50 via-white to-rose-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       {/* Animated header */}
-      <div className="relative flex flex-col items-center overflow-hidden bg-gradient-to-r from-orange-500 to-rose-500 px-4 py-12 text-white">
+      <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 to-rose-500 text-white">
 
-        {/* Top-right controls */}
-        <div className="absolute right-4 top-3 flex items-center gap-2">
-          <div className="flex items-center rounded-full border border-white/30 bg-white/10 p-0.5 backdrop-blur-sm">
-            <button
-              onClick={() => i18n.changeLanguage('nl')}
-              className={[
-                'rounded-full px-3 py-1 text-xs font-semibold transition-colors',
-                i18n.language === 'nl' ? 'bg-white text-orange-500 shadow-sm' : 'text-white/80 hover:text-white',
-              ].join(' ')}
-            >
-              NL
-            </button>
-            <button
-              onClick={() => i18n.changeLanguage('en')}
-              className={[
-                'rounded-full px-3 py-1 text-xs font-semibold transition-colors',
-                i18n.language === 'en' ? 'bg-white text-orange-500 shadow-sm' : 'text-white/80 hover:text-white',
-              ].join(' ')}
-            >
-              EN
-            </button>
-          </div>
-          <button
-            onClick={toggle}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="rounded-full bg-white/10 p-2 text-lg backdrop-blur-sm hover:bg-white/20"
-          >
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
-        </div>
         {/* Floating food emojis */}
         {floatingFood.map((emoji, i) => (
           <span
@@ -72,19 +42,55 @@ export function WelcomeScreen({ onStartManual, onStartTestData }: WelcomeScreenP
           </span>
         ))}
 
-        <div className="relative flex items-center gap-3">
-          <span className="text-5xl" style={{ animation: 'bounce 1s ease-in-out infinite' }}>
+        {/* Single header row: logo+title left, controls right */}
+        <div className="relative mx-auto flex w-full max-w-4xl items-center gap-3 px-4 py-5">
+          <span className="shrink-0 text-4xl" style={{ animation: 'bounce 1s ease-in-out infinite' }}>
             🍽️
           </span>
-          <div>
-            <h1 className="text-3xl font-bold drop-shadow-sm md:text-4xl">{t('welcome.title')}</h1>
-            <p className="mt-1 text-lg text-white/80">{t('welcome.subtitle')}</p>
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate text-xl font-bold leading-tight drop-shadow-sm sm:text-2xl md:text-3xl">
+              {t('welcome.title')}
+            </h1>
+            <p className="mt-0.5 truncate text-xs text-white/80 sm:text-sm md:text-base">
+              {t('welcome.subtitle')}
+            </p>
+          </div>
+
+          {/* Controls — always right-aligned, never overlapping */}
+          <div className="flex shrink-0 items-center gap-2">
+            <div className="flex items-center rounded-full border border-white/30 bg-white/10 p-0.5 backdrop-blur-sm">
+              <button
+                onClick={() => i18n.changeLanguage('nl')}
+                className={[
+                  'rounded-full px-3 py-1 text-xs font-semibold transition-colors',
+                  i18n.language === 'nl' ? 'bg-white text-orange-500 shadow-sm' : 'text-white/80 hover:text-white',
+                ].join(' ')}
+              >
+                NL
+              </button>
+              <button
+                onClick={() => i18n.changeLanguage('en')}
+                className={[
+                  'rounded-full px-3 py-1 text-xs font-semibold transition-colors',
+                  i18n.language === 'en' ? 'bg-white text-orange-500 shadow-sm' : 'text-white/80 hover:text-white',
+                ].join(' ')}
+              >
+                EN
+              </button>
+            </div>
+            <button
+              onClick={toggle}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="rounded-full bg-white/10 p-2 text-lg backdrop-blur-sm hover:bg-white/20"
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
           </div>
         </div>
 
         {/* Running person */}
         <div
-          className="absolute bottom-2 right-6 text-3xl opacity-60"
+          className="absolute bottom-2 right-4 hidden text-3xl opacity-50 sm:block"
           style={{ animation: 'runnerBob 0.5s ease-in-out infinite alternate' }}
         >
           🏃
@@ -148,6 +154,20 @@ export function WelcomeScreen({ onStartManual, onStartTestData }: WelcomeScreenP
                 {t(`welcome.step${step.key}Desc`)}
               </p>
             </button>
+          ))}
+        </div>
+
+        {/* Privacy notice */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          {[
+            { icon: '🔒', key: 'welcome.privacyNoLogin' },
+            { icon: '🖥️', key: 'welcome.privacyLocalOnly' },
+            { icon: '🚫', key: 'welcome.privacyNoServer' },
+          ].map(({ icon, key }) => (
+            <span key={key} className="flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+              <span>{icon}</span>
+              {t(key)}
+            </span>
           ))}
         </div>
 
