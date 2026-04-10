@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+echo "🔍 Running pre-push checks..."
+
+echo "📝 Type checking..."
+pnpm exec tsc --noEmit || { echo "❌ Type check failed!"; exit 1; }
+echo "✅ Type check passed"
+
+echo "🧪 Running tests..."
+pnpm exec vitest run || { echo "❌ Tests failed!"; exit 1; }
+echo "✅ Tests passed"
+
+echo "✅ All pre-push checks passed!"
