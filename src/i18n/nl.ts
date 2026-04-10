@@ -136,6 +136,9 @@ const nl = {
     ctaManual: 'Begin handmatig',
     skip: 'Sla intro over',
     testDataNote: 'Er worden 28 deelnemers in Eindhoven aangemaakt als voorbeeld.',
+    privacyNoLogin: 'Geen account nodig',
+    privacyLocalOnly: 'Alles blijft in je browser',
+    privacyNoServer: 'Geen data verstuurd naar een server',
   },
 } as const
 

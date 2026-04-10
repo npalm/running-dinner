@@ -151,6 +151,20 @@ export function WelcomeScreen({ onStartManual, onStartTestData }: WelcomeScreenP
           ))}
         </div>
 
+        {/* Privacy notice */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          {[
+            { icon: '🔒', key: 'welcome.privacyNoLogin' },
+            { icon: '🖥️', key: 'welcome.privacyLocalOnly' },
+            { icon: '🚫', key: 'welcome.privacyNoServer' },
+          ].map(({ icon, key }) => (
+            <span key={key} className="flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+              <span>{icon}</span>
+              {t(key)}
+            </span>
+          ))}
+        </div>
+
         {/* CTA section */}
         <div className="mt-10 flex flex-col items-center gap-4">
           <div className="flex flex-col gap-3 sm:flex-row">
