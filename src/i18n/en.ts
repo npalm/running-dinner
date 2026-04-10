@@ -140,6 +140,9 @@ const en = {
     privacyLocalOnly: 'Everything stays in your browser',
     privacyNoServer: 'No data sent to any server',
   },
+  footer: {
+    showIntro: 'Show intro again',
+  },
 } as const
 
 export default en

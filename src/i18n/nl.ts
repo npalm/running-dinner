@@ -140,6 +140,9 @@ const nl = {
     privacyLocalOnly: 'Alles blijft in je browser',
     privacyNoServer: 'Geen data verstuurd naar een server',
   },
+  footer: {
+    showIntro: 'Intro opnieuw tonen',
+  },
 } as const
 
 export default nl
