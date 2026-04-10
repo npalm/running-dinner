@@ -13,7 +13,7 @@ interface PdokResponse {
 
 /** Parses "POINT(lon lat)" into a LatLng object. */
 function parseCentroide(centroide: string): LatLng {
-  const match = /POINT\(([^\s]+)\s+([^\)]+)\)/.exec(centroide)
+  const match = /POINT\(([^\s]+)\s+([^)]+)\)/.exec(centroide)
   if (!match) throw new Error(`Cannot parse centroide_ll: ${centroide}`)
   const lng = parseFloat(match[1])
   const lat = parseFloat(match[2])

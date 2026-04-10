@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n from '../../i18n'
+import { useThemeStore } from '../../store/theme'
 
 interface WelcomeScreenProps {
   onStartManual: () => void
@@ -18,11 +20,43 @@ const floatingFood = ['🍝', '🥗', '🍰', '🍷', '🥘', '🧁']
 export function WelcomeScreen({ onStartManual, onStartTestData }: WelcomeScreenProps) {
   const { t } = useTranslation()
   const [activeStep, setActiveStep] = useState(0)
+  const { theme, toggle } = useThemeStore()
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-gradient-to-br from-orange-50 via-white to-rose-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       {/* Animated header */}
       <div className="relative flex flex-col items-center overflow-hidden bg-gradient-to-r from-orange-500 to-rose-500 px-4 py-12 text-white">
+
+        {/* Top-right controls */}
+        <div className="absolute right-4 top-3 flex items-center gap-2">
+          <div className="flex items-center rounded-full border border-white/30 bg-white/10 p-0.5 backdrop-blur-sm">
+            <button
+              onClick={() => i18n.changeLanguage('nl')}
+              className={[
+                'rounded-full px-3 py-1 text-xs font-semibold transition-colors',
+                i18n.language === 'nl' ? 'bg-white text-orange-500 shadow-sm' : 'text-white/80 hover:text-white',
+              ].join(' ')}
+            >
+              NL
+            </button>
+            <button
+              onClick={() => i18n.changeLanguage('en')}
+              className={[
+                'rounded-full px-3 py-1 text-xs font-semibold transition-colors',
+                i18n.language === 'en' ? 'bg-white text-orange-500 shadow-sm' : 'text-white/80 hover:text-white',
+              ].join(' ')}
+            >
+              EN
+            </button>
+          </div>
+          <button
+            onClick={toggle}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="rounded-full bg-white/10 p-2 text-lg backdrop-blur-sm hover:bg-white/20"
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+        </div>
         {/* Floating food emojis */}
         {floatingFood.map((emoji, i) => (
           <span
