@@ -25,10 +25,10 @@ export function WelcomeScreen({ onStartManual, onStartTestData }: WelcomeScreenP
   return (
     <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-gradient-to-br from-orange-50 via-white to-rose-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       {/* Animated header */}
-      <div className="relative flex flex-col items-center overflow-hidden bg-gradient-to-r from-orange-500 to-rose-500 px-4 py-12 text-white">
+      <div className="relative flex flex-col items-center overflow-hidden bg-gradient-to-r from-orange-500 to-rose-500 text-white">
 
-        {/* Top-right controls */}
-        <div className="absolute right-4 top-3 flex items-center gap-2">
+        {/* Top bar: controls pinned right, never overlaps title */}
+        <div className="flex w-full items-center justify-end gap-2 px-4 pt-3 pb-0">
           <div className="flex items-center rounded-full border border-white/30 bg-white/10 p-0.5 backdrop-blur-sm">
             <button
               onClick={() => i18n.changeLanguage('nl')}
@@ -72,19 +72,19 @@ export function WelcomeScreen({ onStartManual, onStartTestData }: WelcomeScreenP
           </span>
         ))}
 
-        <div className="relative flex items-center gap-3">
-          <span className="text-5xl" style={{ animation: 'bounce 1s ease-in-out infinite' }}>
+        <div className="relative flex items-center gap-3 px-4 pb-8 pt-4">
+          <span className="shrink-0 text-4xl sm:text-5xl" style={{ animation: 'bounce 1s ease-in-out infinite' }}>
             🍽️
           </span>
-          <div>
-            <h1 className="text-3xl font-bold drop-shadow-sm md:text-4xl">{t('welcome.title')}</h1>
-            <p className="mt-1 text-lg text-white/80">{t('welcome.subtitle')}</p>
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold leading-tight drop-shadow-sm sm:text-3xl md:text-4xl">{t('welcome.title')}</h1>
+            <p className="mt-1 text-sm text-white/80 sm:text-lg">{t('welcome.subtitle')}</p>
           </div>
         </div>
 
-        {/* Running person */}
+        {/* Running person — hidden on very small screens to avoid overlap */}
         <div
-          className="absolute bottom-2 right-6 text-3xl opacity-60"
+          className="absolute bottom-2 right-4 hidden text-3xl opacity-60 sm:block"
           style={{ animation: 'runnerBob 0.5s ease-in-out infinite alternate' }}
         >
           🏃
