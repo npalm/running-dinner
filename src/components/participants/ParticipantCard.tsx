@@ -23,7 +23,7 @@ export function ParticipantCard({ participant, onEdit, onDelete }: ParticipantCa
 
   return (
     <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex w-full min-w-0 items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-semibold text-gray-900 dark:text-gray-100">
             {participant.name}
