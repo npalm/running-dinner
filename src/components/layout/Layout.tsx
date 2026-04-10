@@ -18,7 +18,7 @@ export function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-orange-50 via-white to-rose-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+    <div className="flex min-h-screen w-full max-w-full flex-col overflow-x-hidden bg-gradient-to-br from-orange-50 via-white to-rose-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       <Header />
       <Navigation />
       <main className="mx-auto w-full max-w-6xl flex-1 px-3 py-4 sm:px-4 sm:py-6">{children}</main>
