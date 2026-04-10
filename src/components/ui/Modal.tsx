@@ -12,25 +12,16 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
+    document.addEventListener('keydown', handler)
+
+    // Lock scroll on the root element (works on iOS Safari too)
     if (open) {
-      document.addEventListener('keydown', handler)
-      // Prevent body scroll (and the white-bar shift on mobile)
-      const scrollY = window.scrollY
-      document.body.style.overflow = 'hidden'
-      document.body.style.position = 'fixed'
-      document.body.style.top = `-${scrollY}px`
-      document.body.style.width = '100%'
+      document.documentElement.style.overflow = 'hidden'
     }
+
     return () => {
       document.removeEventListener('keydown', handler)
-      if (open) {
-        const top = document.body.style.top
-        document.body.style.overflow = ''
-        document.body.style.position = ''
-        document.body.style.top = ''
-        document.body.style.width = ''
-        window.scrollTo(0, parseInt(top || '0', 10) * -1)
-      }
+      document.documentElement.style.overflow = ''
     }
   }, [open, onClose])
 
