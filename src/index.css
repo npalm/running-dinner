@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode (Tailwind v4 defaults to prefers-color-scheme) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  /* Smooth transitions when switching theme */
+  *, *::before, *::after {
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+}
