@@ -34,6 +34,10 @@ export function Navigation() {
           <span>🗺️</span>
           <span>{t('nav.map')}</span>
         </NavLink>
+        <NavLink to="/organizer" className={linkClass}>
+          <span>📄</span>
+          <span>{t('nav.organizer')}</span>
+        </NavLink>
       </div>
     </nav>
   )

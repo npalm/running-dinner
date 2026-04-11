@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParticipantsStore } from '../store/participants'
 import { useScheduleStore } from '../store/schedule'
-import { exportData, importData } from '../lib/storage'
+import { importData } from '../lib/storage'
 import { ParticipantList } from '../components/participants/ParticipantList'
 import { ParticipantForm } from '../components/participants/ParticipantForm'
 import { TestDataForm } from '../components/participants/TestDataForm'
@@ -13,7 +13,7 @@ import type { Participant } from '../types'
 export function ParticipantsPage() {
   const { t } = useTranslation()
   const { participants, add, setAll } = useParticipantsStore()
-  const { schedule, setSchedule } = useScheduleStore()
+  const { setSchedule } = useScheduleStore()
   const [addOpen, setAddOpen] = useState(false)
   const [importing, setImporting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -21,10 +21,6 @@ export function ParticipantsPage() {
   const handleAdd = (data: Omit<Participant, 'id'>) => {
     add(data)
     setAddOpen(false)
-  }
-
-  const handleExport = () => {
-    exportData(participants, schedule)
   }
 
   const handleImportClick = () => {
@@ -66,9 +62,6 @@ export function ParticipantsPage() {
               {t('common.resetParticipants')}
             </Button>
           )}
-          <Button variant="ghost" size="sm" onClick={handleExport}>
-            {t('schedule.export')}
-          </Button>
           <Button variant="ghost" size="sm" loading={importing} onClick={handleImportClick}>
             Import
           </Button>

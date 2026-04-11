@@ -34,6 +34,37 @@ function randomPreference(): CookingPreference {
   return 'prefer-not'
 }
 
+const DIETARY_OPTIONS = [
+  'vegetarisch',
+  'veganistisch',
+  'glutenvrij',
+  'lactosevrij',
+  'notenallergie',
+  'schaaldierenallergie',
+  'halal',
+  'geen varkensvlees',
+  'ei-allergie',
+  'soja-allergie',
+  'diabetisch',
+]
+
+function randomDietaryWishes(): string | undefined {
+  if (Math.random() > 0.40) return undefined
+  const count = Math.random() < 0.3 ? 2 : 1
+  const shuffled = [...DIETARY_OPTIONS].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, count).join(', ')
+}
+
+function toEmail(name: string): string {
+  return (
+    name
+      .toLowerCase()
+      .replace(/&\s*/g, '.')
+      .replace(/\s+/g, '.')
+      .replace(/[^a-z0-9.]/g, '') + '@example.com'
+  )
+}
+
 /**
  * Generates synthetic participants with real addresses via PDOK reverse geocoding.
  * Each participant's coordinates are random within the configured ring, and the
@@ -60,6 +91,8 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
       count: 1,
       coordinates: randomPointInRing(baseCoordinates, minRadiusM, maxRadiusM),
       preference: randomPreference(),
+      dietaryWishes: randomDietaryWishes(),
+      email: toEmail(`${firstName} ${lastName}`),
       fallbackAddress: `${firstName} ${lastName}, Eindhoven`,
     })
   }
@@ -77,6 +110,8 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
       count: 2,
       coordinates: randomPointInRing(baseCoordinates, minRadiusM, maxRadiusM),
       preference: randomPreference(),
+      dietaryWishes: randomDietaryWishes(),
+      email: toEmail(`${firstName1} ${firstName2} ${lastName}`),
       fallbackAddress: `${firstName1} & ${firstName2} ${lastName}, Eindhoven`,
     })
   }
@@ -97,5 +132,7 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
     address: addresses[i],
     coordinates: d.coordinates,
     preference: d.preference,
+    dietaryWishes: d.dietaryWishes,
+    email: d.email,
   }))
 }
