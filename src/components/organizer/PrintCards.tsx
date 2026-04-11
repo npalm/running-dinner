@@ -35,24 +35,6 @@ function InstructionCard({ card, template }: { card: CardData; template: string 
         position: 'relative',
       }}
     >
-      {/* Organizer label — top right corner */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '3mm',
-          right: '4mm',
-          fontSize: '7pt',
-          color: '#9ca3af',
-          textAlign: 'right',
-          maxWidth: '60mm',
-          lineHeight: 1.3,
-        }}
-      >
-        <span style={{ fontWeight: 700 }}>{TYPE_LABEL[card.type]}</span>
-        <br />
-        {card.organizerLabel.split('·').pop()?.trim()}
-      </div>
-
       {/* Decorative top line */}
       <div
         style={{
@@ -68,30 +50,48 @@ function InstructionCard({ card, template }: { card: CardData; template: string 
         }}
       />
 
+      {/* Organizer label — top right, below the bar */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '8mm',
+          right: '4mm',
+          fontSize: '7pt',
+          color: '#9ca3af',
+          textAlign: 'right',
+          maxWidth: '55mm',
+          lineHeight: 1.3,
+        }}
+      >
+        <span style={{ fontWeight: 700 }}>{TYPE_LABEL[card.type]}</span>
+        <br />
+        {card.organizerLabel.split('·').pop()?.trim()}
+      </div>
+
       {/* Message */}
       <p
         style={{
           fontSize: '10pt',
           color: '#374151',
-          lineHeight: 1.5,
+          lineHeight: 1.6,
           flex: 1,
-          paddingRight: '30mm', // avoid overlap with organizer label
+          paddingRight: '32mm',
+          whiteSpace: 'pre-line',
         }}
       >
         {message}
       </p>
 
-      {/* Next address box */}
+      {/* Next address — centered, no border */}
       <div
         style={{
-          border: '2px solid #374151',
-          borderRadius: '6px',
-          padding: '4mm 5mm',
+          textAlign: 'center',
           fontSize: '13pt',
           fontWeight: 700,
           color: '#111827',
           lineHeight: 1.4,
           wordBreak: 'break-word',
+          padding: '3mm 0',
         }}
       >
         {card.nextAddress}
@@ -99,7 +99,7 @@ function InstructionCard({ card, template }: { card: CardData; template: string 
 
       {/* Footer */}
       <p style={{ fontSize: '9pt', color: '#6b7280', marginTop: '1mm' }}>
-        Tot straks! 🍽️
+        Veel plezier! 🍽️
       </p>
     </div>
   )

@@ -19,20 +19,20 @@ export interface CardTemplates {
 
 export const DEFAULT_TEMPLATES_NL: CardTemplates = {
   welcome:
-    'Hoi [namen]! 🎉 De avond staat op het punt te beginnen. Jullie eerste adres voor het voorgerecht is:',
+    'Hoi [namen]!\n\n🎉 De avond staat op het punt te beginnen. Jullie eerste adres voor het voorgerecht is:',
   starterToMain:
-    'Hoi [namen]! We hopen dat jullie hebben genoten van het voorgerecht. Tijd voor het hoofdgerecht! Jullie volgende adres is:',
+    'Hoi [namen]!\n\nWe hopen dat jullie hebben genoten van het voorgerecht. Tijd voor het hoofdgerecht! Jullie volgende adres is:',
   mainToDessert:
-    'Hoi [namen]! We hopen dat jullie hebben genoten van het hoofdgerecht. Tijd voor het nagerecht! Jullie volgende adres is:',
+    'Hoi [namen]!\n\nWe hopen dat jullie hebben genoten van het hoofdgerecht. Tijd voor het nagerecht! Jullie volgende adres is:',
 }
 
 export const DEFAULT_TEMPLATES_EN: CardTemplates = {
   welcome:
-    'Hi [namen]! 🎉 The evening is about to begin. Your first address for the starter is:',
+    'Hi [namen]!\n\n🎉 The evening is about to begin. Your first address for the starter is:',
   starterToMain:
-    'Hi [namen]! We hope you enjoyed the starter. Time for the main course! Your next address is:',
+    'Hi [namen]!\n\nWe hope you enjoyed the starter. Time for the main course! Your next address is:',
   mainToDessert:
-    'Hi [namen]! We hope you enjoyed the main course. Time for dessert! Your next address is:',
+    'Hi [namen]!\n\nWe hope you enjoyed the main course. Time for dessert! Your next address is:',
 }
 
 function tableForParticipant(
