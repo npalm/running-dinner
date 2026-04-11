@@ -13,6 +13,12 @@ const TYPE_LABEL: Record<CardData['type'], string> = {
   'main-to-dessert': '🍲 → 🍮',
 }
 
+/** Keep only the street + number; drop Dutch postcode and city. */
+function streetOnly(address: string): string {
+  // Strip from the first Dutch postcode pattern (e.g. "1234 AB") onward
+  return address.replace(/,?\s*\d{4}\s*[A-Z]{2}\b.*/i, '').replace(/,.*$/, '').trim()
+}
+
 function InstructionCard({ card, template }: { card: CardData; template: string }) {
   const message = applyTemplate(template, card.householdName)
 
@@ -81,7 +87,7 @@ function InstructionCard({ card, template }: { card: CardData; template: string 
           padding: '4mm 0',
         }}
       >
-        {card.nextAddress}
+        {streetOnly(card.nextAddress)}
       </div>
 
       {/* Footer */}
