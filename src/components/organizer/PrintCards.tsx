@@ -74,15 +74,15 @@ function InstructionCard({ card, template }: { card: CardData; template: string 
           fontSize: '10pt',
           color: '#374151',
           lineHeight: 1.6,
-          flex: 1,
           paddingRight: '32mm',
           whiteSpace: 'pre-line',
+          marginTop: '6mm',
         }}
       >
         {message}
       </p>
 
-      {/* Next address — centered, no border */}
+      {/* Next address — vertically centered in remaining space, no border */}
       <div
         style={{
           textAlign: 'center',
@@ -91,7 +91,9 @@ function InstructionCard({ card, template }: { card: CardData; template: string 
           color: '#111827',
           lineHeight: 1.4,
           wordBreak: 'break-word',
-          padding: '3mm 0',
+          marginTop: 'auto',
+          marginBottom: 'auto',
+          padding: '4mm 0',
         }}
       >
         {card.nextAddress}
