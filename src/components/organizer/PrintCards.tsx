@@ -35,26 +35,11 @@ function InstructionCard({ card, template }: { card: CardData; template: string 
         position: 'relative',
       }}
     >
-      {/* Decorative top line */}
-      <div
-        style={{
-          height: '3px',
-          borderRadius: '2px',
-          background:
-            card.type === 'welcome'
-              ? '#22c55e'
-              : card.type === 'starter-to-main'
-                ? '#f97316'
-                : '#8b5cf6',
-          marginBottom: '2mm',
-        }}
-      />
-
-      {/* Organizer label — top right, below the bar */}
+      {/* Organizer label — top right */}
       <div
         style={{
           position: 'absolute',
-          top: '8mm',
+          top: '4mm',
           right: '4mm',
           fontSize: '7pt',
           color: '#9ca3af',
