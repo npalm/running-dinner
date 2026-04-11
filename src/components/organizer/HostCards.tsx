@@ -172,6 +172,9 @@ export function HostCards({ cards, template, onTemplateChange }: Props) {
     return ao - bo
   })
 
+  const cookCards = sorted.filter((c) => c.course !== null)
+  const guestCards = sorted.filter((c) => c.course === null)
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex gap-2">
@@ -184,30 +187,77 @@ export function HostCards({ cards, template, onTemplateChange }: Props) {
       </div>
 
       {view === 'compact' ? (
-        <div className="flex flex-col gap-2">
-          {sorted.map((card) => (
-            <CompactRow key={`${card.hostId}-${String(card.course)}`} card={card} template={template} />
-          ))}
+        <div className="flex flex-col gap-4">
+          {cookCards.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                👨‍🍳 Koken ({cookCards.length})
+              </p>
+              {cookCards.map((card) => (
+                <CompactRow key={`${card.hostId}-${String(card.course)}`} card={card} template={template} />
+              ))}
+            </div>
+          )}
+          {guestCards.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                🍽️ Kookt niet — ontvangen ook een kaartje ({guestCards.length})
+              </p>
+              {guestCards.map((card) => (
+                <CompactRow key={`${card.hostId}-${String(card.course)}`} card={card} template={template} />
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <>
           <style>{`@media print { .host-card { border: 1px solid #d1d5db !important; } }`}</style>
-          {Array.from({ length: Math.ceil(sorted.length / 4) }, (_, pageIdx) => {
-            const pageCards = sorted.slice(pageIdx * 4, pageIdx * 4 + 4)
-            return (
-              <div key={pageIdx} className="print-page-grid mb-4 grid grid-cols-2 gap-3">
-                {pageCards.map((card) => (
-                  <div key={`${card.hostId}-${String(card.course)}`} className="flex flex-col gap-2">
-                    <HostCard card={card} template={template} />
-                    <a href={emailHref(card, template)} target="_blank" rel="noreferrer"
-                      className="print:hidden inline-flex items-center gap-1.5 self-start rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 transition-colors">
-                      ✉️ Opstellen als e-mail
-                    </a>
+          {cookCards.length > 0 && (
+            <div className="flex flex-col gap-3">
+              <p className="print:hidden text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                👨‍🍳 Koken
+              </p>
+              {Array.from({ length: Math.ceil(cookCards.length / 4) }, (_, pageIdx) => {
+                const pageCards = cookCards.slice(pageIdx * 4, pageIdx * 4 + 4)
+                return (
+                  <div key={pageIdx} className="print-page-grid mb-4 grid grid-cols-2 gap-3">
+                    {pageCards.map((card) => (
+                      <div key={`${card.hostId}-${String(card.course)}`} className="flex flex-col gap-2">
+                        <HostCard card={card} template={template} />
+                        <a href={emailHref(card, template)} target="_blank" rel="noreferrer"
+                          className="print:hidden inline-flex items-center gap-1.5 self-start rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 transition-colors">
+                          ✉️ Opstellen als e-mail
+                        </a>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )
-          })}
+                )
+              })}
+            </div>
+          )}
+          {guestCards.length > 0 && (
+            <div className="flex flex-col gap-3">
+              <p className="print:hidden text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                🍽️ Kookt niet — ontvangen ook een kaartje
+              </p>
+              {Array.from({ length: Math.ceil(guestCards.length / 4) }, (_, pageIdx) => {
+                const pageCards = guestCards.slice(pageIdx * 4, pageIdx * 4 + 4)
+                return (
+                  <div key={pageIdx} className="print-page-grid mb-4 grid grid-cols-2 gap-3">
+                    {pageCards.map((card) => (
+                      <div key={`${card.hostId}-${String(card.course)}`} className="flex flex-col gap-2">
+                        <HostCard card={card} template={template} />
+                        <a href={emailHref(card, template)} target="_blank" rel="noreferrer"
+                          className="print:hidden inline-flex items-center gap-1.5 self-start rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 transition-colors">
+                          ✉️ Opstellen als e-mail
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </>
       )}
 
