@@ -20,8 +20,8 @@ jobs:
       cancel-in-progress: true
     permissions:
       contents: read
-      actions: read
-      security-events: write
+      actions: read          # Required for CodeQL action metadata resolution
+      security-events: write # Upload CodeQL SARIF results to GitHub Advanced Security
 
     strategy:
       fail-fast: false
