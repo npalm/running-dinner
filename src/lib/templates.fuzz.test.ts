@@ -5,16 +5,21 @@ import { applyTemplate } from './cards'
 
 const PLACEHOLDERS = ['[namen]', '[gang]', '[emoji]', '[aantal]', '[gasten]', '[dieetwensen]', '[dagzelf]']
 
+/** Arbitrary that never contains a placeholder token — safe to use as a replacement value. */
+const safeString = fc.string().filter(
+  (s) => !PLACEHOLDERS.some((p) => s.toLowerCase().includes(p.toLowerCase())),
+)
+
 describe('applyHostTemplate properties', () => {
   it('no placeholder tokens remain in output when called with defined values', () => {
     fc.assert(
       fc.property(
-        fc.string(),           // template
-        fc.string(),           // hostName
-        fc.string(),           // courseLabel
-        fc.string(),           // emoji
+        fc.string(),           // template (may contain placeholders — those should be replaced)
+        safeString,            // hostName
+        safeString,            // courseLabel
+        safeString,            // emoji
         fc.integer({ min: 0, max: 20 }), // guestCount
-        fc.array(fc.string(), { maxLength: 5 }), // dietaryWishes
+        fc.array(safeString, { maxLength: 5 }), // dietaryWishes
         fc.boolean(),          // isStarterHost
         (template, hostName, courseLabel, emoji, guestCount, dietaryWishes, isStarterHost) => {
           const result = applyHostTemplate(
@@ -90,8 +95,9 @@ describe('applyHostTemplate properties', () => {
 
 describe('applyTemplate (evening cards) properties', () => {
   it('no [namen] placeholder remains', () => {
+    const safeName = fc.string().filter((s) => !s.toLowerCase().includes('[namen]'))
     fc.assert(
-      fc.property(fc.string(), fc.string(), (template, name) => {
+      fc.property(fc.string(), safeName, (template, name) => {
         const result = applyTemplate(template, name)
         expect(result.toLowerCase()).not.toContain('[namen]')
       }),
