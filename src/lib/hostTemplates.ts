@@ -7,16 +7,29 @@ Super fijn dat je meedoet met het Running Dinner! 🎉
 Jij gaat deze editie het [gang] [emoji] maken. Je krijgt [aantal] [gasten] over de vloer. Veel plezier met de voorbereidingen!
 
 [dieetwensen]
-
+[dagzelf]
 Veel kookplezier en tot snel!`
 
+export const DEFAULT_GUEST_TEMPLATE = `Hoi [namen]!
+
+Super fijn dat je meedoet met het Running Dinner! 🎉
+
+Jij hoeft deze editie niet te koken — geniet ervan! 😄
+
+[dagzelf]
+Veel plezier en tot snel!`
+
+const DAG_ZELF_NOTE =
+  'Op de dag zelf kun je post verwachten met het adres van je voorgerecht.'
+
 /** Placeholders:
- * [namen]      → host name(s)
- * [gang]       → course name (lowercase)
- * [emoji]      → course emoji
- * [aantal]     → guest count
- * [gasten]     → "gast" or "gasten"
+ * [namen]       → host/guest name(s)
+ * [gang]        → course name (lowercase)
+ * [emoji]       → course emoji
+ * [aantal]      → guest count
+ * [gasten]      → "gast" or "gasten"
  * [dieetwensen] → dietary wishes block (auto-formatted)
+ * [dagzelf]     → day-of note (empty for starter hosts)
  */
 export function applyHostTemplate(
   template: string,
@@ -25,6 +38,7 @@ export function applyHostTemplate(
   emoji: string,
   guestCount: number,
   dietaryWishes: string[],
+  isStarterHost: boolean,
 ): string {
   const guestWord = guestCount === 1 ? 'gast' : 'gasten'
   const dietBlock =
@@ -39,6 +53,9 @@ export function applyHostTemplate(
     .replace(/\[aantal\]/gi, String(guestCount))
     .replace(/\[gasten\]/gi, guestWord)
     .replace(/\[dieetwensen\]/gi, dietBlock)
+    .replace(/\[dagzelf\]/gi, isStarterHost ? '' : DAG_ZELF_NOTE)
+    .replace(/\n{3,}/g, '\n\n') // collapse triple newlines left by empty [dagzelf]
+    .trim()
 }
 
 export function loadHostTemplate(): string {

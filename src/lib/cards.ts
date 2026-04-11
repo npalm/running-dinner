@@ -108,9 +108,10 @@ export interface HostCardData {
   hostId: string
   hostName: string
   hostAddress: string
-  course: Course
+  course: Course | null  // null = does not host any course
   guestCount: number
   dietaryWishes: string[]
+  isStarterHost: boolean
 }
 
 const COURSE_NL: Record<Course, string> = {
@@ -121,17 +122,19 @@ const COURSE_NL: Record<Course, string> = {
 
 export function buildHostCards(schedule: Schedule, participants: Participant[]): HostCardData[] {
   const pMap = new Map(participants.map((p) => [p.id, p]))
+  const hostIds = new Set(schedule.tables.map((t) => t.hostId))
+  const starterHostIds = new Set(
+    schedule.tables.filter((t) => t.course === 'starter').map((t) => t.hostId),
+  )
 
-  return schedule.tables.map((table) => {
+  // One card per cooking table
+  const hostCards: HostCardData[] = schedule.tables.map((table) => {
     const host = pMap.get(table.hostId)
     const guests = table.guestIds.flatMap((id) => {
       const p = pMap.get(id)
       return p ? [p] : []
     })
-
-    const dietaryWishes = guests
-      .filter((g) => g.dietaryWishes)
-      .map((g) => g.dietaryWishes!)
+    const dietaryWishes = guests.filter((g) => g.dietaryWishes).map((g) => g.dietaryWishes!)
 
     return {
       hostId: table.hostId,
@@ -140,8 +143,24 @@ export function buildHostCards(schedule: Schedule, participants: Participant[]):
       course: table.course,
       guestCount: guests.reduce((sum, g) => sum + g.count, 0),
       dietaryWishes,
+      isStarterHost: starterHostIds.has(table.hostId),
     }
   })
+
+  // Cards for participants who don't host any course
+  const guestCards: HostCardData[] = participants
+    .filter((p) => !hostIds.has(p.id))
+    .map((p) => ({
+      hostId: p.id,
+      hostName: p.name,
+      hostAddress: p.address,
+      course: null,
+      guestCount: 0,
+      dietaryWishes: [],
+      isStarterHost: false,
+    }))
+
+  return [...hostCards, ...guestCards]
 }
 
 export { COURSE_NL }
