@@ -8,7 +8,7 @@ interface Props {
 }
 
 const TYPE_LABEL: Record<CardData['type'], string> = {
-  welcome: '🎉 Welkomst',
+  welcome: '🍽️ Start Running Dinner',
   'starter-to-main': '🥗 → 🍲',
   'main-to-dessert': '🍲 → 🍮',
 }
@@ -56,7 +56,7 @@ function InstructionCard({ card, template }: { card: CardData; template: string 
       >
         <span style={{ fontWeight: 700 }}>{TYPE_LABEL[card.type]}</span>
         <br />
-        {card.organizerLabel.split('·').pop()?.trim()}
+        {streetOnly(card.organizerLabel.split('·').pop()?.trim() ?? '')}
       </div>
 
       {/* Message */}
