@@ -34,6 +34,24 @@ function randomPreference(): CookingPreference {
   return 'prefer-not'
 }
 
+const DIETARY_OPTIONS = [
+  'vegetarisch',
+  'veganistisch',
+  'glutenvrij',
+  'lactosevrij',
+  'notenallergie',
+  'schaaldierenallergie',
+  'halal',
+  'geen varkensvlees',
+]
+
+function randomDietaryWishes(): string | undefined {
+  if (Math.random() > 0.40) return undefined
+  const count = Math.random() < 0.3 ? 2 : 1
+  const shuffled = [...DIETARY_OPTIONS].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, count).join(', ')
+}
+
 /**
  * Generates synthetic participants with real addresses via PDOK reverse geocoding.
  * Each participant's coordinates are random within the configured ring, and the
@@ -60,6 +78,7 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
       count: 1,
       coordinates: randomPointInRing(baseCoordinates, minRadiusM, maxRadiusM),
       preference: randomPreference(),
+      dietaryWishes: randomDietaryWishes(),
       fallbackAddress: `${firstName} ${lastName}, Eindhoven`,
     })
   }
@@ -77,6 +96,7 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
       count: 2,
       coordinates: randomPointInRing(baseCoordinates, minRadiusM, maxRadiusM),
       preference: randomPreference(),
+      dietaryWishes: randomDietaryWishes(),
       fallbackAddress: `${firstName1} & ${firstName2} ${lastName}, Eindhoven`,
     })
   }
@@ -97,5 +117,6 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
     address: addresses[i],
     coordinates: d.coordinates,
     preference: d.preference,
+    dietaryWishes: d.dietaryWishes,
   }))
 }

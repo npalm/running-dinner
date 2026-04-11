@@ -18,6 +18,7 @@ interface FormState {
   address: string
   coordinates: Participant['coordinates']
   preference: CookingPreference
+  dietaryWishes: string
 }
 
 export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormProps) {
@@ -29,6 +30,7 @@ export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormPr
     address: initial?.address ?? '',
     coordinates: initial?.coordinates ?? null,
     preference: initial?.preference ?? null,
+    dietaryWishes: initial?.dietaryWishes ?? '',
   })
 
   const [geocoding, setGeocoding] = useState(false)
@@ -73,6 +75,7 @@ export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormPr
       address: form.address,
       coordinates: form.coordinates,
       preference: form.preference,
+      dietaryWishes: form.dietaryWishes || undefined,
     })
   }
 
@@ -115,6 +118,18 @@ export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormPr
           }))
         }
       />
+      <div className="flex flex-col gap-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          {t('participants.dietaryWishes')}
+        </label>
+        <textarea
+          rows={2}
+          value={form.dietaryWishes}
+          onChange={(e) => setForm((prev) => ({ ...prev, dietaryWishes: e.target.value }))}
+          placeholder={t('participants.dietaryWishesPlaceholder')}
+          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500"
+        />
+      </div>
       <div className="flex justify-end gap-2 pt-2">
         <Button type="button" variant="secondary" onClick={onCancel}>
           {t('common.cancel')}

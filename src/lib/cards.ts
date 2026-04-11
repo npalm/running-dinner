@@ -104,6 +104,48 @@ export function buildCards(schedule: Schedule, participants: Participant[]): Car
   return cards
 }
 
+export interface HostCardData {
+  hostId: string
+  hostName: string
+  hostAddress: string
+  course: Course
+  guestCount: number
+  dietaryWishes: string[]
+}
+
+const COURSE_NL: Record<Course, string> = {
+  starter: 'Voorgerecht',
+  main: 'Hoofdgerecht',
+  dessert: 'Nagerecht',
+}
+
+export function buildHostCards(schedule: Schedule, participants: Participant[]): HostCardData[] {
+  const pMap = new Map(participants.map((p) => [p.id, p]))
+
+  return schedule.tables.map((table) => {
+    const host = pMap.get(table.hostId)
+    const guests = table.guestIds.flatMap((id) => {
+      const p = pMap.get(id)
+      return p ? [p] : []
+    })
+
+    const dietaryWishes = guests
+      .filter((g) => g.dietaryWishes)
+      .map((g) => g.dietaryWishes!)
+
+    return {
+      hostId: table.hostId,
+      hostName: host?.name ?? '?',
+      hostAddress: host?.address ?? '?',
+      course: table.course,
+      guestCount: guests.reduce((sum, g) => sum + g.count, 0),
+      dietaryWishes,
+    }
+  })
+}
+
+export { COURSE_NL }
+
 export function applyTemplate(template: string, householdName: string): string {
   return template.replace(/\[namen\]/gi, householdName)
 }
