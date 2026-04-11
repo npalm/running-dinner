@@ -47,14 +47,14 @@ export function applyHostTemplate(
       : 'Je gasten hebben geen bijzondere dieetwensen — kook lekker los! 🍳'
 
   return template
-    .replace(/\[namen\]/gi, hostName)
-    .replace(/\[gang\]/gi, courseLabel.toLowerCase())
-    .replace(/\[emoji\]/gi, emoji)
-    .replace(/\[aantal\]/gi, String(guestCount))
-    .replace(/\[gasten\]/gi, guestWord)
-    .replace(/\[dieetwensen\]/gi, dietBlock)
-    .replace(/\[dagzelf\]/gi, isStarterHost ? '' : DAG_ZELF_NOTE)
-    .replace(/\n{3,}/g, '\n\n') // collapse triple newlines left by empty [dagzelf]
+    .replace(/\[namen\]/gi, () => hostName)
+    .replace(/\[gang\]/gi, () => courseLabel.toLowerCase())
+    .replace(/\[emoji\]/gi, () => emoji)
+    .replace(/\[aantal\]/gi, () => String(guestCount))
+    .replace(/\[gasten\]/gi, () => guestWord)
+    .replace(/\[dieetwensen\]/gi, () => dietBlock)
+    .replace(/\[dagzelf\]/gi, () => isStarterHost ? '' : DAG_ZELF_NOTE)
+    .replace(/\n{3,}/g, '\n\n')
     .trim()
 }
 

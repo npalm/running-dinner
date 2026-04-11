@@ -1,0 +1,6 @@
+settings:
+  # Supply chain security: delay installing packages published less than 7 days ago.
+  # Matches the dependabot minimum-release-age policy.
+  # Protects against the common attack window where malicious versions are yanked
+  # shortly after being discovered (pnpm >= 10.16 required).
+  minimumReleaseAge: 10080

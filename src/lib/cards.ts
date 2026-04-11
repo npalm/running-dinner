@@ -173,5 +173,5 @@ export function buildHostCards(schedule: Schedule, participants: Participant[]):
 export { COURSE_NL }
 
 export function applyTemplate(template: string, householdName: string): string {
-  return template.replace(/\[namen\]/gi, householdName)
+  return template.replace(/\[namen\]/gi, () => householdName)
 }
