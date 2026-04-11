@@ -18,10 +18,11 @@ const B = makeParticipant('B', 51.41, 5.41)
 const C = makeParticipant('C', 51.42, 5.42)
 
 const schedule: Schedule = {
+  generatedAt: '2026-01-01T00:00:00.000Z',
   tables: [
-    { hostId: 'A', course: 'starter',  guestIds: ['B', 'C'] },
-    { hostId: 'B', course: 'main',     guestIds: ['A', 'C'] },
-    { hostId: 'C', course: 'dessert',  guestIds: ['A', 'B'] },
+    { id: 'T1', hostId: 'A', course: 'starter',  guestIds: ['B', 'C'] },
+    { id: 'T2', hostId: 'B', course: 'main',     guestIds: ['A', 'C'] },
+    { id: 'T3', hostId: 'C', course: 'dessert',  guestIds: ['A', 'B'] },
   ],
 }
 
@@ -52,7 +53,8 @@ describe('buildJourneys', () => {
 
   it('returns null coordinates when participant has no assignment for that course', () => {
     const partialSchedule: Schedule = {
-      tables: [{ hostId: 'A', course: 'starter', guestIds: ['B'] }],
+      generatedAt: '',
+      tables: [{ id: 'T1', hostId: 'A', course: 'starter', guestIds: ['B'] }],
     }
     const journeys = buildJourneys(partialSchedule, [A, B])
     const aJourney = journeys.find((j) => j.participantId === 'A')!
@@ -61,8 +63,8 @@ describe('buildJourneys', () => {
   })
 
   it('handles participant without coordinates gracefully (null)', () => {
-    const noCoords: Participant = { ...A, id: 'X', coordinates: undefined }
-    const sched: Schedule = { tables: [{ hostId: 'X', course: 'starter', guestIds: ['B'] }] }
+    const noCoords: Participant = { ...A, id: 'X', coordinates: null }
+    const sched: Schedule = { generatedAt: '', tables: [{ id: 'T1', hostId: 'X', course: 'starter', guestIds: ['B'] }] }
     const journeys = buildJourneys(sched, [noCoords, B])
     const bJourney = journeys.find((j) => j.participantId === 'B')!
     expect(bJourney.starter).toBeNull()

@@ -33,10 +33,11 @@ const D = makeParticipant({ id: 'D' })
  * - D is a pure guest (not hosting anything)
  */
 const schedule: Schedule = {
+  generatedAt: '2026-01-01T00:00:00.000Z',
   tables: [
-    { hostId: 'A', course: 'starter', guestIds: ['B', 'C'] },
-    { hostId: 'B', course: 'main',    guestIds: ['A', 'C'] },
-    { hostId: 'C', course: 'dessert', guestIds: ['A', 'B'] },
+    { id: 'T1', hostId: 'A', course: 'starter', guestIds: ['B', 'C'] },
+    { id: 'T2', hostId: 'B', course: 'main',    guestIds: ['A', 'C'] },
+    { id: 'T3', hostId: 'C', course: 'dessert', guestIds: ['A', 'B'] },
   ],
 }
 const participants = [A, B, C, D]
@@ -130,10 +131,11 @@ describe('buildCards', () => {
     const BE = makeParticipant({ id: 'BE' })
     const CE = makeParticipant({ id: 'CE' })
     const sched: Schedule = {
+      generatedAt: '2026-01-01T00:00:00.000Z',
       tables: [
-        { hostId: 'BE', course: 'starter', guestIds: ['AE'] },
-        { hostId: 'CE', course: 'main',    guestIds: ['AE'] },
-        { hostId: 'AE', course: 'dessert', guestIds: ['BE'] },
+        { id: 'T1', hostId: 'BE', course: 'starter', guestIds: ['AE'] },
+        { id: 'T2', hostId: 'CE', course: 'main',    guestIds: ['AE'] },
+        { id: 'T3', hostId: 'AE', course: 'dessert', guestIds: ['BE'] },
       ],
     }
     const cards = buildCards(sched, [AWithEmail, BE, CE])
@@ -142,7 +144,7 @@ describe('buildCards', () => {
   })
 
   it('returns empty array when schedule has no tables', () => {
-    const cards = buildCards({ tables: [] }, participants)
+    const cards = buildCards({ tables: [], generatedAt: '' }, participants)
     expect(cards).toHaveLength(0)
   })
 
@@ -194,7 +196,8 @@ describe('buildHostCards', () => {
     const BWithWish = makeParticipant({ id: 'BW', dietaryWishes: 'vegan' })
     const AH = makeParticipant({ id: 'AH' })
     const sched: Schedule = {
-      tables: [{ hostId: 'AH', course: 'starter', guestIds: ['BW'] }],
+      tables: [{ id: 'T1', hostId: 'AH', course: 'starter', guestIds: ['BW'] }],
+      generatedAt: '',
     }
     const cards = buildHostCards(sched, [AH, BWithWish])
     const ahCard = cards.find((c) => c.hostId === 'AH')
@@ -203,7 +206,8 @@ describe('buildHostCards', () => {
 
   it('unknown participant id in guestIds is skipped gracefully', () => {
     const sched: Schedule = {
-      tables: [{ hostId: 'A', course: 'starter', guestIds: ['MISSING'] }],
+      generatedAt: '',
+      tables: [{ id: 'T1', hostId: 'A', course: 'starter', guestIds: ['MISSING'] }],
     }
     expect(() => buildHostCards(sched, [A])).not.toThrow()
   })

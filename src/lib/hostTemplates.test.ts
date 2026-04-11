@@ -106,13 +106,13 @@ describe('applyHostTemplate', () => {
 
 describe('loadHostTemplate / saveHostTemplate', () => {
   beforeEach(() => {
+    const store: Record<string, string> = {}
     vi.stubGlobal('localStorage', {
-      _store: {} as Record<string, string>,
-      getItem(key: string) { return this._store[key] ?? null },
-      setItem(key: string, value: string) { this._store[key] = value },
-      removeItem(key: string) { delete this._store[key] },
-      clear() { this._store = {} },
-    })
+      getItem: (key: string) => store[key] ?? null,
+      setItem: (key: string, value: string) => { store[key] = value },
+      removeItem: (key: string) => { delete store[key] },
+      clear: () => { Object.keys(store).forEach((k) => delete store[k]) },
+    } satisfies Pick<Storage, 'getItem' | 'setItem' | 'removeItem' | 'clear'>)
   })
 
   it('loadHostTemplate returns DEFAULT_HOST_TEMPLATE when nothing stored', () => {
