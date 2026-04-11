@@ -8,6 +8,7 @@ import { ScheduleBoard } from '../components/schedule/ScheduleBoard'
 import { ScheduleTablesView } from '../components/schedule/ScheduleTablesView'
 import { ScheduleCourseView } from '../components/schedule/ScheduleCourseView'
 import { MeetingsView } from '../components/schedule/MeetingsView'
+import { ScheduleInsights } from '../components/schedule/ScheduleInsights'
 import { GeneratingAnimation } from '../components/schedule/GeneratingAnimation'
 import { Button } from '../components/ui/Button'
 
@@ -189,6 +190,10 @@ export function SchedulePage() {
             {t('schedule.noScheduleHint')}
           </p>
         </div>
+      )}
+
+      {!generating && !optimizing && schedule && (
+        <ScheduleInsights schedule={schedule} participants={participants} />
       )}
 
       {!generating && !optimizing && schedule && meetings && (

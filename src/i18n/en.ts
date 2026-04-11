@@ -92,6 +92,11 @@ const en = {
     cooks: 'Cooks',
     visits: 'Visits',
     tableSize: 'persons',
+    insights: 'Schedule notes',
+    nonCooks: 'Not cooking',
+    preferenceNotMet: 'Preference not met',
+    wanted: 'Wanted',
+    got: 'Assigned',
   },
   map: {
     title: 'Map',

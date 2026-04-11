@@ -92,6 +92,11 @@ const nl = {
     cooks: 'Kookt',
     visits: 'Bezoekt',
     tableSize: 'personen',
+    insights: 'Opmerkingen indeling',
+    nonCooks: 'Kookt niet',
+    preferenceNotMet: 'Voorkeur niet gehaald',
+    wanted: 'Wens',
+    got: 'Toegewezen',
   },
   map: {
     title: 'Kaart',
