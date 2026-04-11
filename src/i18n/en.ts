@@ -3,6 +3,7 @@ const en = {
     participants: 'Participants',
     schedule: 'Schedule',
     map: 'Map',
+    organizer: 'Organizer',
   },
   participants: {
     title: 'Participants',
@@ -150,6 +151,25 @@ const en = {
   },
   footer: {
     showIntro: 'Show intro again',
+  },
+  organizer: {
+    title: 'Organizer',
+    subtitle: 'Documents and cards for the organizer',
+    printCards: 'Print cards',
+    printCardsHint: 'Opens the print dialog. Choose "Save as PDF" to create a PDF.',
+    exportJson: 'Export as JSON',
+    noSchedule: 'Generate a schedule first to create cards.',
+    noCards: 'No cards to generate.',
+    cardCount: 'cards',
+    templateTitle: 'Edit message templates',
+    templateDesc: 'Use [namen] as a placeholder for the household name.',
+    templateHint: 'Use [namen] for the household name.',
+    templateWelcome: '🎉 Welcome card (start of the evening)',
+    templateStarterToMain: '🥗 → 🍲 Starter to Main course',
+    templateMainToDessert: '🍲 → 🍮 Main course to Dessert',
+    sectionCards: 'Cards',
+    sectionTemplates: 'Message templates',
+    sectionExport: 'Export',
   },
 } as const
 

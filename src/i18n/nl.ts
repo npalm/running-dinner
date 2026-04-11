@@ -3,6 +3,7 @@ const nl = {
     participants: 'Deelnemers',
     schedule: 'Indeling',
     map: 'Kaart',
+    organizer: 'Organisator',
   },
   participants: {
     title: 'Deelnemers',
@@ -150,6 +151,25 @@ const nl = {
   },
   footer: {
     showIntro: 'Intro opnieuw tonen',
+  },
+  organizer: {
+    title: 'Organisator',
+    subtitle: 'Documenten en kaartjes voor de organisatie',
+    printCards: 'Kaartjes afdrukken',
+    printCardsHint: 'Opent het printvenster. Kies "Opslaan als PDF" om een PDF te maken.',
+    exportJson: 'Exporteer als JSON',
+    noSchedule: 'Genereer eerst een indeling om kaartjes te maken.',
+    noCards: 'Geen kaartjes te genereren.',
+    cardCount: 'kaartjes',
+    templateTitle: 'Berichtteksten aanpassen',
+    templateDesc: 'Gebruik [namen] als plaatshouder voor de naam van het huishouden.',
+    templateHint: 'Gebruik [namen] voor de naam van het huishouden.',
+    templateWelcome: '🎉 Welkomstkaart (start van de avond)',
+    templateStarterToMain: '🥗 → 🍲 Voorgerecht naar Hoofdgerecht',
+    templateMainToDessert: '🍲 → 🍮 Hoofdgerecht naar Nagerecht',
+    sectionCards: 'Kaartjes',
+    sectionTemplates: 'Berichtteksten',
+    sectionExport: 'Exporteren',
   },
 } as const
 

@@ -4,6 +4,7 @@ import { Layout } from './components/layout/Layout'
 import { ParticipantsPage } from './pages/ParticipantsPage'
 import { SchedulePage } from './pages/SchedulePage'
 import { MapPage } from './pages/MapPage'
+import { OrganizerPage } from './pages/OrganizerPage'
 import { WelcomeScreen } from './components/welcome/WelcomeScreen'
 import { useParticipantsStore } from './store/participants'
 import { generateTestData } from './lib/testdata'
@@ -45,6 +46,7 @@ function AppInner() {
         <Route path="/participants" element={<ParticipantsPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/map" element={<MapPage />} />
+        <Route path="/organizer" element={<OrganizerPage />} />
       </Routes>
     </Layout>
   )
