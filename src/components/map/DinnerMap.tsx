@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { Course, Participant, Schedule } from '../../types'
+import { buildJourneys, buildUniqueSegments, fetchRoutesInBatches } from '../../lib/routes'
 
 // Fix Leaflet default icon issue with bundlers
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl
@@ -15,6 +16,9 @@ interface DinnerMapProps {
   participants: Participant[]
   schedule: Schedule | null
   showHostsOnly?: boolean
+  showRoutes?: boolean
+  routeFilter?: 'both' | 'to-main' | 'to-dessert'
+  onRoutesLoaded?: () => void
 }
 
 type MarkerColor = 'green' | 'orange' | 'purple' | 'gray'
@@ -60,7 +64,12 @@ function getMarkerColor(course: Course | null, isHost: boolean): MarkerColor {
 
 const EINDHOVEN: L.LatLngTuple = [51.4416, 5.4697]
 
-export function DinnerMap({ participants, schedule, showHostsOnly = false }: DinnerMapProps) {
+const ROUTE_COLORS: Record<'to-main' | 'to-dessert', string> = {
+  'to-main': '#6366f1',    // indigo
+  'to-dessert': '#f43f5e', // rose
+}
+
+export function DinnerMap({ participants, schedule, showHostsOnly = false, showRoutes = false, routeFilter = 'both', onRoutesLoaded }: DinnerMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const markersRef = useRef<L.Marker[]>([])
@@ -125,6 +134,98 @@ export function DinnerMap({ participants, schedule, showHostsOnly = false }: Din
       map.fitBounds(L.latLngBounds(latLngs), { padding: [40, 40] })
     }
   }, [participants, schedule, showHostsOnly])
+
+  // Use a ref so the callback never triggers the effect to re-run
+  const onRoutesLoadedRef = useRef(onRoutesLoaded)
+  useEffect(() => { onRoutesLoadedRef.current = onRoutesLoaded })
+
+  // Persistent line groups per type — survive filter switches
+  const lineGroupsRef = useRef<{ 'to-main': L.Polyline[]; 'to-dessert': L.Polyline[] }>({
+    'to-main': [],
+    'to-dessert': [],
+  })
+  const fetchedTypesRef = useRef<Set<'to-main' | 'to-dessert'>>(new Set())
+
+  // Clear all route lines and reset fetched-state when schedule changes or routes are disabled
+  useEffect(() => {
+    if (!showRoutes || !schedule) {
+      for (const lines of Object.values(lineGroupsRef.current)) {
+        for (const l of lines) l.remove()
+      }
+      lineGroupsRef.current = { 'to-main': [], 'to-dessert': [] }
+      fetchedTypesRef.current = new Set()
+    }
+  }, [showRoutes, schedule])
+
+  // Route lines effect — only fetches types not yet drawn
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !showRoutes || !schedule) return
+
+    const journeys = buildJourneys(schedule, participants)
+
+    // Show / hide existing line groups based on current filter
+    for (const [type, lines] of Object.entries(lineGroupsRef.current) as [
+      'to-main' | 'to-dessert',
+      L.Polyline[],
+    ][]) {
+      const visible = routeFilter === 'both' || routeFilter === type
+      for (const l of lines) {
+        if (visible) l.addTo(map)
+        else l.remove()
+      }
+    }
+
+    // Determine which types still need fetching
+    const typesToFetch: ('to-main' | 'to-dessert')[] = (
+      ['to-main', 'to-dessert'] as const
+    ).filter((t) => !fetchedTypesRef.current.has(t))
+
+    if (typesToFetch.length === 0) {
+      onRoutesLoadedRef.current?.()
+      return
+    }
+
+    let aborted = false
+
+    void Promise.all(
+      typesToFetch.map(async (type) => {
+        const segments = buildUniqueSegments(journeys, type)
+        const results = await fetchRoutesInBatches(segments)
+        return { type, segments, results }
+      }),
+    ).then((groups) => {
+      if (aborted || !mapRef.current) return
+      for (const { type, results } of groups) {
+        // Remove any previously drawn lines for this type (e.g. partial fallbacks)
+        for (const l of lineGroupsRef.current[type]) l.remove()
+
+        const lines: L.Polyline[] = []
+        const visible = routeFilter === 'both' || routeFilter === type
+        let anyFailed = false
+        for (let i = 0; i < results.length; i++) {
+          const coords = results[i]
+          if (coords === null) {
+            anyFailed = true
+            continue // skip straight-line fallback — don't pollute the map
+          }
+          const line = L.polyline(coords, {
+            color: ROUTE_COLORS[type],
+            weight: 3,
+            opacity: 0.65,
+          })
+          if (visible && mapRef.current) line.addTo(mapRef.current)
+          lines.push(line)
+        }
+        lineGroupsRef.current[type] = lines
+        // Only mark as done if all segments resolved — otherwise retry next render
+        if (!anyFailed) fetchedTypesRef.current.add(type)
+      }
+      onRoutesLoadedRef.current?.()
+    })
+
+    return () => { aborted = true }
+  }, [showRoutes, routeFilter, schedule, participants])
 
   return <div ref={containerRef} className="h-full w-full rounded-xl" />
 }

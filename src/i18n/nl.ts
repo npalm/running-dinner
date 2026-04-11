@@ -107,6 +107,11 @@ const nl = {
     main: 'Hoofdgerecht',
     dessert: 'Nagerecht',
     noCoordinates: 'Geen coördinaten beschikbaar',
+    showRoutes: 'Routes',
+    routesBoth: 'Beide',
+    routesToMain: '→ Hoofdgerecht',
+    routesToDessert: '→ Nagerecht',
+    loadingRoutes: 'Routes berekenen…',
   },
   testData: {
     title: 'Testdata',

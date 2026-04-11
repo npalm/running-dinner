@@ -107,6 +107,11 @@ const en = {
     main: 'Main course',
     dessert: 'Dessert',
     noCoordinates: 'No coordinates available',
+    showRoutes: 'Routes',
+    routesBoth: 'Both',
+    routesToMain: '→ Main course',
+    routesToDessert: '→ Dessert',
+    loadingRoutes: 'Calculating routes…',
   },
   testData: {
     title: 'Test data',
