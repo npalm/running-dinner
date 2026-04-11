@@ -8,7 +8,7 @@ interface Props {
 }
 
 const TYPE_LABEL: Record<CardData['type'], string> = {
-  welcome: '🍽️ Start Running Dinner',
+  welcome: '🍽️',
   'starter-to-main': '🥗 → 🍲',
   'main-to-dessert': '🍲 → 🍮',
 }
