@@ -60,6 +60,16 @@ export function ParticipantCard({ participant, onEdit, onDelete }: ParticipantCa
               </a>
             )}
           </div>
+          {participant.email && (
+            <p className="mt-0.5 truncate text-xs text-gray-400 dark:text-gray-500">
+              ✉️ {participant.email}
+            </p>
+          )}
+          {participant.dietaryWishes && (
+            <p className="mt-0.5 truncate text-xs text-amber-700 dark:text-amber-400">
+              ⚠️ {participant.dietaryWishes}
+            </p>
+          )}
         </div>
         <div className="flex shrink-0 gap-1">
           <Button

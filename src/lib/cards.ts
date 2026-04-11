@@ -6,6 +6,7 @@ export interface CardData {
   type: CardType
   householdId: string
   householdName: string
+  householdEmail?: string
   nextAddress: string
   deliveryAddress: string
   organizerLabel: string
@@ -68,6 +69,7 @@ export function buildCards(schedule: Schedule, participants: Participant[]): Car
         type: 'welcome',
         householdId: participant.id,
         householdName: participant.name,
+        householdEmail: participant.email,
         nextAddress: starterHost.address,
         deliveryAddress: participant.address,
         organizerLabel: `Welkomst → Voorgerecht · Bezorgen: ${participant.address}`,
@@ -81,6 +83,7 @@ export function buildCards(schedule: Schedule, participants: Participant[]): Car
         type: 'starter-to-main',
         householdId: participant.id,
         householdName: participant.name,
+        householdEmail: participant.email,
         nextAddress: mainHost.address,
         deliveryAddress,
         organizerLabel: `Voorgerecht → Hoofdgerecht · Bezorgen: ${deliveryAddress}`,
@@ -94,6 +97,7 @@ export function buildCards(schedule: Schedule, participants: Participant[]): Car
         type: 'main-to-dessert',
         householdId: participant.id,
         householdName: participant.name,
+        householdEmail: participant.email,
         nextAddress: dessertHost.address,
         deliveryAddress,
         organizerLabel: `Hoofdgerecht → Nagerecht · Bezorgen: ${deliveryAddress}`,
@@ -107,8 +111,9 @@ export function buildCards(schedule: Schedule, participants: Participant[]): Car
 export interface HostCardData {
   hostId: string
   hostName: string
+  hostEmail?: string
   hostAddress: string
-  course: Course | null  // null = does not host any course
+  course: Course | null
   guestCount: number
   dietaryWishes: string[]
   isStarterHost: boolean
@@ -139,6 +144,7 @@ export function buildHostCards(schedule: Schedule, participants: Participant[]):
     return {
       hostId: table.hostId,
       hostName: host?.name ?? '?',
+      hostEmail: host?.email,
       hostAddress: host?.address ?? '?',
       course: table.course,
       guestCount: guests.reduce((sum, g) => sum + g.count, 0),
@@ -153,6 +159,7 @@ export function buildHostCards(schedule: Schedule, participants: Participant[]):
     .map((p) => ({
       hostId: p.id,
       hostName: p.name,
+      hostEmail: p.email,
       hostAddress: p.address,
       course: null,
       guestCount: 0,

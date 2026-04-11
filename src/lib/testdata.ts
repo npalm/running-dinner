@@ -43,6 +43,9 @@ const DIETARY_OPTIONS = [
   'schaaldierenallergie',
   'halal',
   'geen varkensvlees',
+  'ei-allergie',
+  'soja-allergie',
+  'diabetisch',
 ]
 
 function randomDietaryWishes(): string | undefined {
@@ -50,6 +53,16 @@ function randomDietaryWishes(): string | undefined {
   const count = Math.random() < 0.3 ? 2 : 1
   const shuffled = [...DIETARY_OPTIONS].sort(() => Math.random() - 0.5)
   return shuffled.slice(0, count).join(', ')
+}
+
+function toEmail(name: string): string {
+  return (
+    name
+      .toLowerCase()
+      .replace(/&\s*/g, '.')
+      .replace(/\s+/g, '.')
+      .replace(/[^a-z0-9.]/g, '') + '@example.com'
+  )
 }
 
 /**
@@ -79,6 +92,7 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
       coordinates: randomPointInRing(baseCoordinates, minRadiusM, maxRadiusM),
       preference: randomPreference(),
       dietaryWishes: randomDietaryWishes(),
+      email: toEmail(`${firstName} ${lastName}`),
       fallbackAddress: `${firstName} ${lastName}, Eindhoven`,
     })
   }
@@ -97,6 +111,7 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
       coordinates: randomPointInRing(baseCoordinates, minRadiusM, maxRadiusM),
       preference: randomPreference(),
       dietaryWishes: randomDietaryWishes(),
+      email: toEmail(`${firstName1} ${firstName2} ${lastName}`),
       fallbackAddress: `${firstName1} & ${firstName2} ${lastName}, Eindhoven`,
     })
   }
@@ -118,5 +133,6 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
     coordinates: d.coordinates,
     preference: d.preference,
     dietaryWishes: d.dietaryWishes,
+    email: d.email,
   }))
 }

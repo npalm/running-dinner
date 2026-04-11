@@ -39,7 +39,7 @@ function emailHref(card: HostCardData, template: string): string {
   const { label } = courseDisplay(card)
   const subject = encodeURIComponent(`Running Dinner – ${card.course ? `Kookkaartje ${label}` : 'Welkom!'}`)
   const body = encodeURIComponent(buildText(card, template))
-  return `mailto:?subject=${subject}&body=${body}`
+  return `mailto:${card.hostEmail ?? ''}?subject=${subject}&body=${body}`
 }
 
 function HostCard({ card, template }: { card: HostCardData; template: string }) {

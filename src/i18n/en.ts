@@ -18,6 +18,7 @@ const en = {
     preference: 'Course preference',
     dietaryWishes: 'Dietary wishes / allergies',
     dietaryWishesPlaceholder: 'e.g. vegetarian, gluten-free, nut allergy…',
+    email: 'Email address',
     persons: 'persons',
     noPreference: 'No preference',
     total: 'Total',

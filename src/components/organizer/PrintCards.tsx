@@ -29,7 +29,7 @@ function emailHref(card: CardData, templates: CardTemplates): string {
   const tmpl = templateForCard(card, templates)
   const message = applyTemplate(tmpl, card.householdName)
   const body = encodeURIComponent(`${message}\n\n📍 ${card.nextAddress}`)
-  return `mailto:?subject=${subject}&body=${body}`
+  return `mailto:${card.householdEmail ?? ''}?subject=${subject}&body=${body}`
 }
 
 function InstructionCard({ card, template }: { card: CardData; template: string }) {

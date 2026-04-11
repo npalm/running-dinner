@@ -13,6 +13,7 @@ export interface Participant {
   coordinates: LatLng | null
   preference: CookingPreference
   dietaryWishes?: string
+  email?: string
 }
 
 export type Course = 'starter' | 'main' | 'dessert'

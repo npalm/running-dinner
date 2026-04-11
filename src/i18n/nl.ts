@@ -18,6 +18,7 @@ const nl = {
     preference: 'Voorkeur gang',
     dietaryWishes: 'Dieetwensen / allergieën',
     dietaryWishesPlaceholder: 'bijv. vegetarisch, glutenvrij, notenallergie…',
+    email: 'E-mailadres',
     persons: 'personen',
     noPreference: 'Geen voorkeur',
     total: 'Totaal',
