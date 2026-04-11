@@ -5,6 +5,7 @@ import { useScheduleStore } from '../store/schedule'
 import { buildCards, buildHostCards, DEFAULT_TEMPLATES_NL, DEFAULT_TEMPLATES_EN } from '../lib/cards'
 import type { CardTemplates } from '../lib/cards'
 import { exportData } from '../lib/storage'
+import { exportScheduleCsv, downloadCsv } from '../lib/csv'
 import { loadTemplates } from '../lib/templates'
 import { loadHostTemplate } from '../lib/hostTemplates'
 import { PrintCards } from '../components/organizer/PrintCards'
@@ -27,6 +28,12 @@ export function OrganizerPage() {
 
   const handleExport = () => {
     exportData(participants, schedule)
+  }
+
+  const handleExportScheduleCsv = () => {
+    if (!schedule) return
+    const csv = exportScheduleCsv(schedule, participants)
+    downloadCsv(csv, 'indeling.csv')
   }
 
   const noSchedule = (
@@ -103,10 +110,15 @@ export function OrganizerPage() {
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Exporteer alle deelnemers en de indeling als JSON bestand.
           </p>
-          <div>
+          <div className="flex flex-wrap gap-2">
             <Button variant="secondary" onClick={handleExport}>
               📥 {t('organizer.exportJson')}
             </Button>
+            {schedule && (
+              <Button variant="secondary" onClick={handleExportScheduleCsv}>
+                📊 {t('organizer.exportScheduleCsv')}
+              </Button>
+            )}
           </div>
         </div>
       </Collapsible>

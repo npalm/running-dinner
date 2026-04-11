@@ -4,11 +4,13 @@ import { useParticipantsStore } from '../store/participants'
 import { useScheduleStore } from '../store/schedule'
 import { exportData } from '../lib/storage'
 import { validateSchedule, computeMeetings } from '../lib/schedule'
+import { computeDistanceStats } from '../lib/stats'
 import { ScheduleBoard } from '../components/schedule/ScheduleBoard'
 import { ScheduleTablesView } from '../components/schedule/ScheduleTablesView'
 import { ScheduleCourseView } from '../components/schedule/ScheduleCourseView'
 import { MeetingsView } from '../components/schedule/MeetingsView'
 import { ScheduleInsights } from '../components/schedule/ScheduleInsights'
+import { DistanceStats } from '../components/schedule/DistanceStats'
 import { GeneratingAnimation } from '../components/schedule/GeneratingAnimation'
 import { Button } from '../components/ui/Button'
 
@@ -194,6 +196,10 @@ export function SchedulePage() {
 
       {!generating && !optimizing && schedule && (
         <ScheduleInsights schedule={schedule} participants={participants} />
+      )}
+
+      {!generating && !optimizing && schedule && (
+        <DistanceStats stats={computeDistanceStats(schedule, participants)} />
       )}
 
       {!generating && !optimizing && schedule && meetings && (
