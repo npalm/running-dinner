@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import type { HostCardData } from '../../lib/cards'
 import { COURSE_NL } from '../../lib/cards'
+import { applyHostTemplate, saveHostTemplate } from '../../lib/hostTemplates'
 
 interface Props {
   cards: HostCardData[]
+  template: string
+  onTemplateChange: (t: string) => void
 }
 
 const COURSE_EMOJI: Record<string, string> = {
@@ -12,35 +15,25 @@ const COURSE_EMOJI: Record<string, string> = {
   dessert: '🍮',
 }
 
-function buildCardText(card: HostCardData): string {
-  const courseLabel = COURSE_NL[card.course].toLowerCase()
-  const emoji = COURSE_EMOJI[card.course]
-  const guestWord = card.guestCount === 1 ? 'gast' : 'gasten'
-
-  const dietLine =
-    card.dietaryWishes.length > 0
-      ? `Let op de volgende dieetwensen van je gasten:\n${card.dietaryWishes.map((w) => `• ${w}`).join('\n')}`
-      : 'Je gasten hebben geen bijzondere dieetwensen — kook lekker los! 🍳'
-
-  return (
-    `Hoi ${card.hostName}!\n\n` +
-    `Super fijn dat je meedoet met het Running Dinner! 🎉\n\n` +
-    `Jij gaat deze editie het ${courseLabel} ${emoji} maken. ` +
-    `Je krijgt ${card.guestCount} ${guestWord} over de vloer. ` +
-    `Veel plezier met de voorbereidingen!\n\n` +
-    `${dietLine}\n\n` +
-    `Veel kookplezier en tot snel!`
+function buildText(card: HostCardData, template: string): string {
+  return applyHostTemplate(
+    template,
+    card.hostName,
+    COURSE_NL[card.course],
+    COURSE_EMOJI[card.course],
+    card.guestCount,
+    card.dietaryWishes,
   )
 }
 
-function emailHref(card: HostCardData): string {
+function emailHref(card: HostCardData, template: string): string {
   const courseLabel = COURSE_NL[card.course]
   const subject = encodeURIComponent(`Running Dinner – Kookkaartje ${courseLabel}`)
-  const body = encodeURIComponent(buildCardText(card))
+  const body = encodeURIComponent(buildText(card, template))
   return `mailto:?subject=${subject}&body=${body}`
 }
 
-function HostCard({ card }: { card: HostCardData }) {
+function HostCard({ card, template }: { card: HostCardData; template: string }) {
   const courseLabel = COURSE_NL[card.course]
   const emoji = COURSE_EMOJI[card.course]
 
@@ -87,7 +80,7 @@ function HostCard({ card }: { card: HostCardData }) {
           marginTop: '6mm',
         }}
       >
-        {buildCardText(card)}
+        {buildText(card, template)}
       </p>
 
       <p style={{ fontSize: '9pt', color: '#6b7280', marginTop: 'auto' }}>
@@ -97,7 +90,7 @@ function HostCard({ card }: { card: HostCardData }) {
   )
 }
 
-function CompactRow({ card }: { card: HostCardData }) {
+function CompactRow({ card, template }: { card: HostCardData; template: string }) {
   const courseLabel = COURSE_NL[card.course]
   const emoji = COURSE_EMOJI[card.course]
   const guestWord = card.guestCount === 1 ? 'gast' : 'gasten'
@@ -124,7 +117,7 @@ function CompactRow({ card }: { card: HostCardData }) {
         )}
       </div>
       <a
-        href={emailHref(card)}
+        href={emailHref(card, template)}
         target="_blank"
         rel="noreferrer"
         className="shrink-0 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-xs text-gray-600 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-orange-900/20 dark:hover:text-orange-400 transition-colors"
@@ -136,7 +129,51 @@ function CompactRow({ card }: { card: HostCardData }) {
   )
 }
 
-export function HostCards({ cards }: Props) {
+function TemplateSection({
+  template,
+  onChange,
+}: {
+  template: string
+  onChange: (t: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/60 transition-colors"
+      >
+        <span>✏️ Berichttekst aanpassen</span>
+        <span className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden>▾</span>
+      </button>
+      {open && (
+        <div className="border-t border-gray-200 p-4 dark:border-gray-700 flex flex-col gap-2">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Gebruik: <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[namen]</code>{' '}
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[gang]</code>{' '}
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[emoji]</code>{' '}
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[aantal]</code>{' '}
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[gasten]</code>{' '}
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[dieetwensen]</code>
+          </p>
+          <textarea
+            rows={10}
+            value={template}
+            onChange={(e) => {
+              onChange(e.target.value)
+              saveHostTemplate(e.target.value)
+            }}
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 font-mono text-xs text-gray-900 focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function HostCards({ cards, template, onTemplateChange }: Props) {
   const [view, setView] = useState<'compact' | 'cards'>('compact')
 
   if (cards.length === 0) return null
@@ -172,7 +209,7 @@ export function HostCards({ cards }: Props) {
       {view === 'compact' ? (
         <div className="flex flex-col gap-2">
           {sorted.map((card) => (
-            <CompactRow key={`${card.hostId}-${card.course}`} card={card} />
+            <CompactRow key={`${card.hostId}-${card.course}`} card={card} template={template} />
           ))}
         </div>
       ) : (
@@ -184,9 +221,9 @@ export function HostCards({ cards }: Props) {
               <div key={pageIdx} className="print-page-grid mb-4 grid grid-cols-2 gap-3">
                 {pageCards.map((card) => (
                   <div key={`${card.hostId}-${card.course}`} className="flex flex-col gap-2">
-                    <HostCard card={card} />
+                    <HostCard card={card} template={template} />
                     <a
-                      href={emailHref(card)}
+                      href={emailHref(card, template)}
                       target="_blank"
                       rel="noreferrer"
                       className="print:hidden inline-flex items-center gap-1.5 self-start rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 transition-colors"
@@ -200,6 +237,8 @@ export function HostCards({ cards }: Props) {
           })}
         </>
       )}
+
+      <TemplateSection template={template} onChange={onTemplateChange} />
     </div>
   )
 }
