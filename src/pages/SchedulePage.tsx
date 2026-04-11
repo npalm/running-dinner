@@ -1,17 +1,35 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParticipantsStore } from '../store/participants'
 import { useScheduleStore } from '../store/schedule'
 import { exportData } from '../lib/storage'
 import { validateSchedule, computeMeetings } from '../lib/schedule'
 import { ScheduleBoard } from '../components/schedule/ScheduleBoard'
+import { ScheduleTablesView } from '../components/schedule/ScheduleTablesView'
+import { ScheduleCourseView } from '../components/schedule/ScheduleCourseView'
 import { MeetingsView } from '../components/schedule/MeetingsView'
 import { GeneratingAnimation } from '../components/schedule/GeneratingAnimation'
 import { Button } from '../components/ui/Button'
+
+type ScheduleView = 'board' | 'tables' | 'course'
+const VIEW_KEY = 'running-dinner-schedule-view'
+
+function getSavedView(): ScheduleView {
+  const v = localStorage.getItem(VIEW_KEY)
+  if (v === 'board' || v === 'tables' || v === 'course') return v
+  return 'board'
+}
 
 export function SchedulePage() {
   const { t } = useTranslation()
   const participants = useParticipantsStore((s) => s.participants)
   const { schedule, generating, optimizing, optimizeProgress, optimizeBestScore, generate, optimize, setSchedule } = useScheduleStore()
+  const [scheduleView, setScheduleView] = useState<ScheduleView>(getSavedView)
+
+  function switchView(v: ScheduleView) {
+    setScheduleView(v)
+    localStorage.setItem(VIEW_KEY, v)
+  }
 
   const handleResetSchedule = () => {
     if (window.confirm(t('common.resetConfirmSchedule'))) {
@@ -128,7 +146,40 @@ export function SchedulePage() {
           bestScore={optimizeBestScore < Infinity ? optimizeBestScore : undefined}
         />
       ) : schedule ? (
-        <ScheduleBoard schedule={schedule} participants={participants} />
+        <>
+          {/* View toggle */}
+          <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800 self-start">
+            {([
+              { key: 'board', icon: '🗂️', label: t('schedule.viewBoard') },
+              { key: 'tables', icon: '🪑', label: t('schedule.viewTables') },
+              { key: 'course', icon: '🍽️', label: t('schedule.viewCourse') },
+            ] as { key: ScheduleView; icon: string; label: string }[]).map(({ key, icon, label }) => (
+              <button
+                key={key}
+                onClick={() => switchView(key)}
+                className={[
+                  'flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                  scheduleView === key
+                    ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white'
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
+                ].join(' ')}
+              >
+                <span>{icon}</span>
+                <span className="hidden sm:inline">{label}</span>
+              </button>
+            ))}
+          </div>
+
+          {scheduleView === 'board' && (
+            <ScheduleBoard schedule={schedule} participants={participants} />
+          )}
+          {scheduleView === 'tables' && (
+            <ScheduleTablesView schedule={schedule} participants={participants} />
+          )}
+          {scheduleView === 'course' && (
+            <ScheduleCourseView schedule={schedule} participants={participants} />
+          )}
+        </>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 py-16 text-center dark:border-gray-600">
           <p className="text-lg font-medium text-gray-500 dark:text-gray-400">
