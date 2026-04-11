@@ -77,7 +77,7 @@ export function buildUniqueSegments(
 }
 
 /** Decode a Valhalla/Google encoded polyline6 string → [lat, lng][] */
-function decodePolyline6(encoded: string): [number, number][] {
+export function decodePolyline6(encoded: string): [number, number][] {
   const coords: [number, number][] = []
   let index = 0
   let lat = 0
