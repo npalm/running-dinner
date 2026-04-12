@@ -3,19 +3,23 @@ import { useTranslation } from 'react-i18next'
 import { useParticipantsStore } from '../store/participants'
 import { useScheduleStore } from '../store/schedule'
 import { importData } from '../lib/storage'
+import { exportParticipantsCsv, downloadCsv } from '../lib/csv'
 import { ParticipantList } from '../components/participants/ParticipantList'
 import { ParticipantForm } from '../components/participants/ParticipantForm'
 import { TestDataForm } from '../components/participants/TestDataForm'
+import { CsvImport } from '../components/participants/CsvImport'
 import { Modal } from '../components/ui/Modal'
 import { Button } from '../components/ui/Button'
 import type { Participant } from '../types'
+import { geocodeAddress } from '../lib/geocoding'
 
 export function ParticipantsPage() {
   const { t } = useTranslation()
-  const { participants, add, setAll } = useParticipantsStore()
+  const { participants, add, addMany, setAll } = useParticipantsStore()
   const { setSchedule } = useScheduleStore()
   const [addOpen, setAddOpen] = useState(false)
   const [importing, setImporting] = useState(false)
+  const [csvImportOpen, setCsvImportOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleAdd = (data: Omit<Participant, 'id'>) => {
@@ -43,6 +47,21 @@ export function ParticipantsPage() {
     }
   }
 
+  const handleCsvImport = async (rows: Omit<Participant, 'id' | 'coordinates'>[]) => {
+    const withCoords = await Promise.all(
+      rows.map(async (row) => {
+        const result = await geocodeAddress(row.address).catch(() => null)
+        return { ...row, coordinates: result?.coordinates ?? null }
+      }),
+    )
+    addMany(withCoords)
+  }
+
+  const handleExportParticipantsCsv = () => {
+    const csv = exportParticipantsCsv(participants)
+    downloadCsv(csv, 'deelnemers.csv')
+  }
+
   const handleResetParticipants = () => {
     if (window.confirm(t('common.resetConfirmParticipants'))) {
       setAll([])
@@ -58,12 +77,20 @@ export function ParticipantsPage() {
         </h2>
         <div className="flex flex-wrap gap-2">
           {participants.length > 0 && (
-            <Button variant="danger" size="sm" onClick={handleResetParticipants}>
-              {t('common.resetParticipants')}
-            </Button>
+            <>
+              <Button variant="ghost" size="sm" onClick={handleExportParticipantsCsv}>
+                {t('organizer.exportParticipantsCsv')}
+              </Button>
+              <Button variant="danger" size="sm" onClick={handleResetParticipants}>
+                {t('common.resetParticipants')}
+              </Button>
+            </>
           )}
           <Button variant="ghost" size="sm" loading={importing} onClick={handleImportClick}>
-            Import
+            Import JSON
+          </Button>
+          <Button variant="secondary" size="sm" onClick={() => setCsvImportOpen(true)}>
+            {t('csv.importButton')}
           </Button>
           <Button variant="primary" onClick={() => setAddOpen(true)}>
             {t('participants.add')}
@@ -82,6 +109,12 @@ export function ParticipantsPage() {
       <ParticipantList />
 
       <TestDataForm />
+
+      <CsvImport
+        open={csvImportOpen}
+        onClose={() => setCsvImportOpen(false)}
+        onImport={handleCsvImport}
+      />
 
       <Modal
         open={addOpen}
