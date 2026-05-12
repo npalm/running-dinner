@@ -13,6 +13,8 @@ export function StrategySettings() {
   const { t } = useTranslation()
   const strategy = useSettingsStore((s) => s.strategy)
   const setStrategy = useSettingsStore((s) => s.setStrategy)
+  const allowVariableTables = useSettingsStore((s) => s.allowVariableTables)
+  const setAllowVariableTables = useSettingsStore((s) => s.setAllowVariableTables)
 
   const move = (index: number, direction: -1 | 1) => {
     const next = [...strategy]
@@ -59,6 +61,23 @@ export function StrategySettings() {
           </li>
         ))}
       </ul>
+
+      <div className="mt-4">
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={allowVariableTables}
+            onChange={(e) => setAllowVariableTables(e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {t('settings.allowVariableTables')}
+          </span>
+        </label>
+        <p className="ml-6 mt-1 text-xs text-gray-500 dark:text-gray-400">
+          {t('settings.allowVariableTablesDescription')}
+        </p>
+      </div>
 
       <div className="space-y-2">
         <p className="text-xs font-medium text-gray-500 dark:text-gray-400">

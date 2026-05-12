@@ -28,6 +28,7 @@ export function SchedulePage() {
   const { t } = useTranslation()
   const participants = useParticipantsStore((s) => s.participants)
   const strategy = useSettingsStore((s) => s.strategy)
+  const allowVariableTables = useSettingsStore((s) => s.allowVariableTables)
   const { schedule, generating, optimizing, optimizeProgress, optimizeBestScore, generate, optimize, setSchedule } = useScheduleStore()
   const [scheduleView, setScheduleView] = useState<ScheduleView>(getSavedView)
 
@@ -46,11 +47,11 @@ export function SchedulePage() {
   const meetings = schedule ? computeMeetings(schedule, participants) : null
 
   const handleGenerate = () => {
-    generate(participants, strategy)
+    generate(participants, strategy, allowVariableTables)
   }
 
   const handleOptimize = () => {
-    optimize(participants, strategy)
+    optimize(participants, strategy, allowVariableTables)
   }
 
   const handleExport = () => {
@@ -128,10 +129,25 @@ export function SchedulePage() {
         </div>
       )}
 
+      {schedule?.warnings && schedule.warnings.length > 0 && (
+        <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+          <p className="mb-2 text-sm font-medium text-blue-800 dark:text-blue-300">
+            {t('schedule.generationWarnings')}
+          </p>
+          <ul className="list-inside list-disc space-y-1">
+            {schedule.warnings.map((w, i) => (
+              <li key={i} className="text-sm text-blue-700 dark:text-blue-400">
+                {w}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {warnings.length > 0 && (
         <div className="rounded-lg bg-orange-50 p-4 dark:bg-orange-900/20">
           <p className="mb-2 text-sm font-medium text-orange-800 dark:text-orange-300">
-            Validation warnings:
+            {t('schedule.validationWarnings')}
           </p>
           <ul className="list-inside list-disc space-y-1">
             {warnings.map((w, i) => (

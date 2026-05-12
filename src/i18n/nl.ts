@@ -15,6 +15,9 @@ const nl = {
     preferSmall: 'Voorkeur klein',
     preferLarge: 'Voorkeur groot',
     reset: 'Standaard herstellen',
+    allowVariableTables: 'Variabel aantal tafels per gang',
+    allowVariableTablesDescription:
+      'Indien ingeschakeld mogen gangen een verschillend aantal tafels hebben, zodat iedere deelnemer kan koken. Aanbevolen wanneer niet iedereen kan koken.',
   },
   participants: {
     title: 'Deelnemers',
@@ -105,6 +108,8 @@ const nl = {
     cooks: 'Kookt',
     visits: 'Bezoekt',
     tableSize: 'personen',
+    generationWarnings: 'Generatie opmerkingen:',
+    validationWarnings: 'Validatie waarschuwingen:',
     insights: 'Opmerkingen indeling',
     nonCooks: 'Kookt niet',
     preferenceNotMet: 'Voorkeur niet gehaald',

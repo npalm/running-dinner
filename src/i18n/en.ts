@@ -15,6 +15,9 @@ const en = {
     preferSmall: 'Prefer small',
     preferLarge: 'Prefer large',
     reset: 'Reset to default',
+    allowVariableTables: 'Allow variable tables per course',
+    allowVariableTablesDescription:
+      'When enabled, courses may have different numbers of tables so every participant can host. Recommended for groups where not all can cook.',
   },
   participants: {
     title: 'Participants',
@@ -105,6 +108,8 @@ const en = {
     cooks: 'Cooks',
     visits: 'Visits',
     tableSize: 'persons',
+    generationWarnings: 'Generation notes:',
+    validationWarnings: 'Validation warnings:',
     insights: 'Schedule notes',
     nonCooks: 'Not cooking',
     preferenceNotMet: 'Preference not met',

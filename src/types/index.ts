@@ -29,6 +29,7 @@ export interface Table {
 export interface Schedule {
   tables: Table[]
   generatedAt: string
+  warnings?: string[]
 }
 
 export interface TestDataConfig {
