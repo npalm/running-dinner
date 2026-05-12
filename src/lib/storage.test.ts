@@ -25,6 +25,7 @@ function makeParticipant(id: string): Participant {
     address: `Street ${id}, City`,
     coordinates: { lat: 51.4, lng: 5.4 },
     preference: null,
+    canCook: true,
   }
 }
 
@@ -215,7 +216,7 @@ describe('exportData', () => {
 
     const participant: Participant = {
       id: 'p1', name: 'Test', count: 1,
-      address: 'Teststreet 1', coordinates: null, preference: null,
+      address: 'Teststreet 1', coordinates: null, preference: null, canCook: true,
     }
     exportData([participant], null)
 

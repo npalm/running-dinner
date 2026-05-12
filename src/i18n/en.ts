@@ -5,6 +5,17 @@ const en = {
     map: 'Map',
     organizer: 'Organizer',
   },
+  settings: {
+    title: 'Settings',
+    strategy: 'Table-size strategy',
+    strategyDescription:
+      'Drag sizes into preferred order. The algorithm picks the best fit for the number of participants.',
+    presets: 'Presets',
+    balanced: 'Balanced',
+    preferSmall: 'Prefer small',
+    preferLarge: 'Prefer large',
+    reset: 'Reset to default',
+  },
   participants: {
     title: 'Participants',
     add: 'Add participant',
@@ -29,6 +40,7 @@ const en = {
     geocodeError: 'Address not found',
     addressHint: 'Enter a full address (street, number, city)',
     confirmDelete: 'Are you sure you want to remove this participant?',
+    cannotCook: 'Cannot cook',
   },
   preferences: {
     starter: 'Starter',
@@ -40,6 +52,7 @@ const en = {
   count: {
     one: '1 person',
     two: '2 persons',
+    three: '3 persons',
   },
   schedule: {
     title: 'Schedule',
@@ -97,6 +110,7 @@ const en = {
     preferenceNotMet: 'Preference not met',
     wanted: 'Wanted',
     got: 'Assigned',
+    cannotCook: 'Cannot cook',
   },
   map: {
     title: 'Map',

@@ -30,12 +30,15 @@ export function ParticipantCard({ participant, onEdit, onDelete }: ParticipantCa
           </h3>
           <div className="mt-1 flex flex-wrap items-center gap-1.5">
             <Badge variant="count">
-              {participant.count === 1 ? t('count.one') : t('count.two')}
+              {participant.count === 1 ? t('count.one') : participant.count === 2 ? t('count.two') : t('count.three')}
             </Badge>
             {preferenceVariant ? (
               <Badge variant={preferenceVariant}>{preferenceLabel}</Badge>
             ) : (
               <Badge variant="neutral">{preferenceLabel}</Badge>
+            )}
+            {participant.canCook === false && (
+              <Badge variant="neutral">🚫 {t('participants.cannotCook')}</Badge>
             )}
           </div>
           <div className="mt-2 flex items-center gap-1">

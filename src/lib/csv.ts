@@ -50,9 +50,11 @@ function parsePreference(raw: string): CookingPreference {
   return null
 }
 
-function parseCount(raw: string): 1 | 2 {
+function parseCount(raw: string): 1 | 2 | 3 {
   const n = parseInt(raw.trim(), 10)
-  return n === 2 ? 2 : 1
+  if (n === 3) return 3
+  if (n === 2) return 2
+  return 1
 }
 
 export interface ParsedParticipantRow {
@@ -103,6 +105,7 @@ export function parseParticipantCsv(text: string): ParsedParticipantRow[] {
       email: cols[3] || undefined,
       preference: parsePreference(cols[4] ?? ''),
       dietaryWishes: cols[5] || undefined,
+      canCook: true,
     }
 
     return { row, participant }

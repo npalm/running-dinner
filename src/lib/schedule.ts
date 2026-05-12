@@ -1,9 +1,32 @@
-import type { Course, Participant, Schedule, Table } from '../types'
+import type { Course, Participant, Schedule, Table, TableSizeStrategy } from '../types'
 import { buildNeighborGraph } from './coordinates'
 
 const COURSES: Course[] = ['starter', 'main', 'dessert']
-const TARGET_SIZE = 6
 const MAX_SIZE = 8
+
+export const DEFAULT_STRATEGY: TableSizeStrategy = [6, 5, 7, 8, 4]
+
+export function selectTargetSize(
+  totalPersons: number,
+  strategy: TableSizeStrategy = DEFAULT_STRATEGY,
+): { targetSize: number; tablesPerCourse: number } {
+  let bestTarget = strategy[0]
+  let bestTables = Math.max(1, Math.round(totalPersons / bestTarget))
+  let bestRemainder = Math.abs(totalPersons - bestTables * bestTarget)
+
+  for (let i = 1; i < strategy.length; i++) {
+    const target = strategy[i]
+    const tables = Math.max(1, Math.round(totalPersons / target))
+    const remainder = Math.abs(totalPersons - tables * target)
+    if (remainder < bestRemainder) {
+      bestTarget = target
+      bestTables = tables
+      bestRemainder = remainder
+    }
+  }
+
+  return { targetSize: bestTarget, tablesPerCourse: bestTables }
+}
 const REPEAT_PENALTY = 50   // subtracted per person the guest has already met at a table
 const NEIGHBOR_PENALTY = 200 // subtracted when host is a geographic neighbor
 
@@ -26,7 +49,7 @@ function selectHosts(
   alreadyHosting: Set<string>,
 ): Participant[] {
   return participants
-    .filter((p) => !alreadyHosting.has(p.id))
+    .filter((p) => !alreadyHosting.has(p.id) && p.canCook !== false)
     .map((p) => ({ p, score: hostScore(p, course) + Math.random() * 0.5 }))
     .sort((a, b) => b.score - a.score)
     .slice(0, count)
@@ -48,6 +71,7 @@ function assignGuests(
   neighborGraph: Map<string, Set<string>>,
   alreadyMet: Map<string, Set<string>>,
   participants: Participant[],
+  targetSize: number,
 ): void {
   const participantMap = new Map(participants.map((p) => [p.id, p]))
 
@@ -76,8 +100,8 @@ function assignGuests(
 
     // Size score: reward filling toward target, penalise overshoot
     const afterAdd = current + guest.count
-    const toTarget = Math.max(0, TARGET_SIZE - current)
-    const overshoot = Math.max(0, afterAdd - TARGET_SIZE)
+    const toTarget = Math.max(0, targetSize - current)
+    const overshoot = Math.max(0, afterAdd - targetSize)
     const sizeScore = toTarget - overshoot * 2
 
     return sizeScore - repeatCount * REPEAT_PENALTY - isNeighbor * NEIGHBOR_PENALTY
@@ -85,9 +109,10 @@ function assignGuests(
 
   // Process pairs before singles for better bin-packing
   // Shuffle within each size group so order doesn't bias results
+  const triples = nonHosts.filter((p) => p.count === 3).sort(() => Math.random() - 0.5)
   const pairs = nonHosts.filter((p) => p.count === 2).sort(() => Math.random() - 0.5)
   const singles = nonHosts.filter((p) => p.count === 1).sort(() => Math.random() - 0.5)
-  const guestList = [...pairs, ...singles]
+  const guestList = [...triples, ...pairs, ...singles]
 
   for (const guest of guestList) {
     // Pick the best-scoring table
@@ -125,10 +150,19 @@ function buildMetGraph(tables: Table[]): Map<string, Set<string>> {
  * Each participant hosts exactly one course and attends one table per course.
  * Uses cross-course meeting awareness to minimise repeat encounters.
  */
-export function generateSchedule(participants: Participant[]): Schedule {
+export function generateSchedule(
+  participants: Participant[],
+  strategy: TableSizeStrategy = DEFAULT_STRATEGY,
+): Schedule {
   const totalPersons = participants.reduce((s, p) => s + p.count, 0)
-  const tablesPerCourse = Math.max(1, Math.round(totalPersons / TARGET_SIZE))
+  const { targetSize, tablesPerCourse: initialTables } = selectTargetSize(totalPersons, strategy)
+  let tablesPerCourse = initialTables
   const neighborGraph = buildNeighborGraph(participants)
+
+  const cookableCount = participants.filter((p) => p.canCook !== false).length
+  while (tablesPerCourse * COURSES.length > cookableCount && tablesPerCourse > 1) {
+    tablesPerCourse--
+  }
 
   const tables: Table[] = []
   const alreadyHosting = new Set<string>()
@@ -150,7 +184,7 @@ export function generateSchedule(participants: Participant[]): Schedule {
     // Build met-graph from all courses so far so this course avoids repeating them
     const alreadyMet = buildMetGraph(tables)
 
-    assignGuests(courseTables, nonHosts, neighborGraph, alreadyMet, participants)
+    assignGuests(courseTables, nonHosts, neighborGraph, alreadyMet, participants, targetSize)
     tables.push(...courseTables)
   }
 
@@ -260,12 +294,16 @@ export function computeMeetings(schedule: Schedule, participants: Participant[])
  * duplicate meeting pairs (people who share a table more than once).
  * This is a simple random-restart hill-climbing approach.
  */
-export function optimizeSchedule(participants: Participant[], attempts = 30): Schedule {
+export function optimizeSchedule(
+  participants: Participant[],
+  attempts = 30,
+  strategy: TableSizeStrategy = DEFAULT_STRATEGY,
+): Schedule {
   let best: Schedule | null = null
   let bestScore = Infinity
 
   for (let i = 0; i < attempts; i++) {
-    const schedule = generateSchedule(participants)
+    const schedule = generateSchedule(participants, strategy)
     const { duplicatePairs } = computeMeetings(schedule, participants)
     // Score = total extra meetings (sum of (count-1) for each duplicate pair)
     const score = duplicatePairs.reduce((s, [, , count]) => s + (count - 1), 0)

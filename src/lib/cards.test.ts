@@ -16,6 +16,7 @@ function makeParticipant(overrides: Partial<Participant> & { id: string }): Part
     address: `Street ${overrides.id}, City`,
     coordinates: { lat: 51.4, lng: 5.4 },
     preference: null,
+    canCook: true,
     ...overrides,
   }
 }

@@ -111,6 +111,7 @@ const makeP = (overrides: Partial<Participant> & { id: string }): Participant =>
   address: 'Straat 1',
   coordinates: null,
   preference: null,
+  canCook: true,
   ...overrides,
 })
 

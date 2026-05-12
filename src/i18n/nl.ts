@@ -5,6 +5,17 @@ const nl = {
     map: 'Kaart',
     organizer: 'Organisator',
   },
+  settings: {
+    title: 'Instellingen',
+    strategy: 'Tafelgrootte-strategie',
+    strategyDescription:
+      'Versleep de groottes in gewenste volgorde. Het algoritme kiest de beste match voor het aantal deelnemers.',
+    presets: 'Voorinstellingen',
+    balanced: 'Gebalanceerd',
+    preferSmall: 'Voorkeur klein',
+    preferLarge: 'Voorkeur groot',
+    reset: 'Standaard herstellen',
+  },
   participants: {
     title: 'Deelnemers',
     add: 'Deelnemer toevoegen',
@@ -29,6 +40,7 @@ const nl = {
     geocodeError: 'Adres niet gevonden',
     addressHint: 'Vul een volledig adres in (straat, huisnummer, woonplaats)',
     confirmDelete: 'Weet je zeker dat je deze deelnemer wilt verwijderen?',
+    cannotCook: 'Kan niet koken',
   },
   preferences: {
     starter: 'Voorgerecht',
@@ -40,6 +52,7 @@ const nl = {
   count: {
     one: '1 persoon',
     two: '2 personen',
+    three: '3 personen',
   },
   schedule: {
     title: 'Indeling',
@@ -97,6 +110,7 @@ const nl = {
     preferenceNotMet: 'Voorkeur niet gehaald',
     wanted: 'Wens',
     got: 'Toegewezen',
+    cannotCook: 'Kan niet koken',
   },
   map: {
     title: 'Kaart',

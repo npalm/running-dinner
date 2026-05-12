@@ -91,6 +91,7 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
       count: 1,
       coordinates: randomPointInRing(baseCoordinates, minRadiusM, maxRadiusM),
       preference: randomPreference(),
+      canCook: true,
       dietaryWishes: randomDietaryWishes(),
       email: toEmail(`${firstName} ${lastName}`),
       fallbackAddress: `${firstName} ${lastName}, Eindhoven`,
@@ -110,6 +111,7 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
       count: 2,
       coordinates: randomPointInRing(baseCoordinates, minRadiusM, maxRadiusM),
       preference: randomPreference(),
+      canCook: true,
       dietaryWishes: randomDietaryWishes(),
       email: toEmail(`${firstName1} ${firstName2} ${lastName}`),
       fallbackAddress: `${firstName1} & ${firstName2} ${lastName}, Eindhoven`,
@@ -132,6 +134,7 @@ export async function generateTestData(config: TestDataConfig): Promise<Particip
     address: addresses[i],
     coordinates: d.coordinates,
     preference: d.preference,
+    canCook: d.canCook,
     dietaryWishes: d.dietaryWishes,
     email: d.email,
   }))

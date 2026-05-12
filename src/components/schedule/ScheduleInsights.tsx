@@ -28,6 +28,9 @@ export function ScheduleInsights({ schedule, participants }: Props) {
   // Who is NOT cooking
   const nonCooks = participants.filter((p) => !hostIds.has(p.id))
 
+  // Who cannot cook
+  const cannotCookParticipants = participants.filter((p) => p.canCook === false)
+
   // Who didn't get their preference honored
   const preferenceIssues = participants
     .filter((p) => p.preference)
@@ -46,7 +49,7 @@ export function ScheduleInsights({ schedule, participants }: Props) {
       got: hostCourse.get(p.id) ?? null,
     }))
 
-  if (nonCooks.length === 0 && preferenceIssues.length === 0) return null
+  if (nonCooks.length === 0 && preferenceIssues.length === 0 && cannotCookParticipants.length === 0) return null
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
@@ -64,6 +67,24 @@ export function ScheduleInsights({ schedule, participants }: Props) {
               <span
                 key={p.id}
                 className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/40 dark:text-blue-300"
+              >
+                {p.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {cannotCookParticipants.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            🚫 {t('schedule.cannotCook')} ({cannotCookParticipants.length})
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {cannotCookParticipants.map((p) => (
+              <span
+                key={p.id}
+                className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/40 dark:text-red-300"
               >
                 {p.name}
               </span>

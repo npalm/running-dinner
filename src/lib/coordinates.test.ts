@@ -17,6 +17,7 @@ function makeParticipant(id: string, lat: number, lng: number): Participant {
     address: 'Test Street 1, City',
     coordinates: { lat, lng },
     preference: null,
+    canCook: true,
   }
 }
 
@@ -165,6 +166,7 @@ describe('buildNeighborGraph', () => {
       address: 'Unknown',
       coordinates: null,
       preference: null,
+      canCook: true,
     }
     const graph = buildNeighborGraph([a, noCoords])
     expect(graph.has('b')).toBe(false)

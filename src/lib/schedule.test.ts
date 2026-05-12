@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateSchedule, validateSchedule, computeMeetings, optimizeSchedule } from './schedule'
+import { generateSchedule, validateSchedule, computeMeetings, optimizeSchedule, selectTargetSize } from './schedule'
 import type { Participant, Course } from '../types'
 
 let idCounter = 0
@@ -12,6 +12,7 @@ function makeParticipant(overrides: Partial<Participant> = {}): Participant {
     address: `Street ${id}, City`,
     coordinates: { lat: 51.4 + idCounter * 0.01, lng: 5.4 + idCounter * 0.01 },
     preference: null,
+    canCook: true,
     ...overrides,
   }
 }
@@ -22,7 +23,7 @@ function makeParticipants(totalPersons: number): Participant[] {
   let remaining = totalPersons
   while (remaining > 0) {
     const count = remaining >= 2 ? 2 : 1
-    participants.push(makeParticipant({ count: count as 1 | 2 }))
+    participants.push(makeParticipant({ count: count as 1 | 2 | 3 }))
     remaining -= count
   }
   return participants
@@ -130,6 +131,60 @@ describe('generateSchedule', () => {
     const schedule = generateSchedule(participants)
     expect(typeof schedule.generatedAt).toBe('string')
     expect(new Date(schedule.generatedAt).getTime()).not.toBeNaN()
+  })
+
+  it('never selects canCook=false participants as hosts', () => {
+    idCounter = 0
+    const cannotCookIds = new Set<string>()
+    const participants: Participant[] = []
+    for (let i = 0; i < 4; i++) {
+      const p = makeParticipant({ canCook: false })
+      cannotCookIds.add(p.id)
+      participants.push(p)
+    }
+    for (let i = 0; i < 24; i++) {
+      participants.push(makeParticipant({ canCook: true }))
+    }
+    const schedule = generateSchedule(participants)
+    const hostIds = new Set(schedule.tables.map((t) => t.hostId))
+    for (const id of cannotCookIds) {
+      expect(hostIds.has(id)).toBe(false)
+    }
+  })
+
+  it('handles 3-person groups correctly', () => {
+    idCounter = 0
+    const participants: Participant[] = []
+    // Add some triples
+    for (let i = 0; i < 4; i++) {
+      participants.push(makeParticipant({ count: 3 }))
+    }
+    // Add some singles to fill
+    for (let i = 0; i < 6; i++) {
+      participants.push(makeParticipant({ count: 1 }))
+    }
+    // Total = 4*3 + 6*1 = 18 persons
+    const schedule = generateSchedule(participants)
+    const warnings = validateSchedule(schedule, participants)
+    expect(warnings).toEqual([])
+  })
+
+  it('reduces tables per course when not enough hosts available', () => {
+    idCounter = 0
+    const participants: Participant[] = []
+    // 10 participants, 7 cannot cook → only 3 can host → 1 table per course
+    for (let i = 0; i < 7; i++) {
+      participants.push(makeParticipant({ count: 1, canCook: false }))
+    }
+    for (let i = 0; i < 3; i++) {
+      participants.push(makeParticipant({ count: 1, canCook: true }))
+    }
+    const schedule = generateSchedule(participants)
+    // Should not crash, each course should have exactly 1 table
+    for (const course of ['starter', 'main', 'dessert'] as const) {
+      const courseTables = schedule.tables.filter((t) => t.course === course)
+      expect(courseTables.length).toBe(1)
+    }
   })
 })
 
@@ -258,6 +313,46 @@ describe('optimizeSchedule', () => {
     // The score (sum of extra meetings) should be reasonable
     const score = duplicatePairs.reduce((s, [, , c]) => s + (c - 1), 0)
     expect(score).toBeGreaterThanOrEqual(0)
+  })
+})
+
+describe('selectTargetSize', () => {
+  it('picks exact fit when available', () => {
+    // 12 persons / 6 = 2 tables, remainder 0
+    expect(selectTargetSize(12, [6, 5, 7])).toEqual({ targetSize: 6, tablesPerCourse: 2 })
+  })
+
+  it('picks the strategy entry with smallest remainder', () => {
+    // 13 persons: strategy [6,5,7]
+    //   6 → tables=round(13/6)=2, remainder=|13-12|=1
+    //   5 → tables=round(13/5)=3, remainder=|13-15|=2
+    //   7 → tables=round(13/7)=2, remainder=|13-14|=1
+    // Tie between 6 and 7; 6 comes first
+    expect(selectTargetSize(13, [6, 5, 7]).targetSize).toBe(6)
+  })
+
+  it('breaks ties by strategy order (earlier wins)', () => {
+    // 14 persons: [7,6] → 7: tables=2, rem=0; 6: tables=2, rem=2 → picks 7
+    expect(selectTargetSize(14, [7, 6]).targetSize).toBe(7)
+    // 12 persons: [6,4] → 6: tables=2, rem=0; 4: tables=3, rem=0 → tie, 6 first
+    expect(selectTargetSize(12, [6, 4]).targetSize).toBe(6)
+  })
+
+  it('handles small total persons', () => {
+    // 3 persons: [6,5,4] → all give tables=1, remainders 3,2,1 → picks 4 (rem=1)
+    expect(selectTargetSize(3, [6, 5, 4]).targetSize).toBe(4)
+  })
+
+  it('handles single-entry strategy', () => {
+    expect(selectTargetSize(18, [5])).toEqual({ targetSize: 5, tablesPerCourse: 4 })
+    expect(selectTargetSize(7, [8])).toEqual({ targetSize: 8, tablesPerCourse: 1 })
+  })
+
+  it('always returns at least 1 table (never divides by zero)', () => {
+    // Even with 1 person
+    const result = selectTargetSize(1, [6, 5, 7])
+    expect([6, 5, 7]).toContain(result.targetSize)
+    expect(result.tablesPerCourse).toBeGreaterThanOrEqual(1)
   })
 })
 

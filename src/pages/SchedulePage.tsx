@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParticipantsStore } from '../store/participants'
 import { useScheduleStore } from '../store/schedule'
+import { useSettingsStore } from '../store/settings'
 import { exportData } from '../lib/storage'
 import { validateSchedule, computeMeetings } from '../lib/schedule'
 import { computeDistanceStats } from '../lib/stats'
@@ -26,6 +27,7 @@ function getSavedView(): ScheduleView {
 export function SchedulePage() {
   const { t } = useTranslation()
   const participants = useParticipantsStore((s) => s.participants)
+  const strategy = useSettingsStore((s) => s.strategy)
   const { schedule, generating, optimizing, optimizeProgress, optimizeBestScore, generate, optimize, setSchedule } = useScheduleStore()
   const [scheduleView, setScheduleView] = useState<ScheduleView>(getSavedView)
 
@@ -44,11 +46,11 @@ export function SchedulePage() {
   const meetings = schedule ? computeMeetings(schedule, participants) : null
 
   const handleGenerate = () => {
-    generate(participants)
+    generate(participants, strategy)
   }
 
   const handleOptimize = () => {
-    optimize(participants)
+    optimize(participants, strategy)
   }
 
   const handleExport = () => {
