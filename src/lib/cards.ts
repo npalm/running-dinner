@@ -20,11 +20,11 @@ export interface CardTemplates {
 
 export const DEFAULT_TEMPLATES_NL: CardTemplates = {
   welcome:
-    'Hoi [namen]!\n\n🎉 De avond staat op het punt te beginnen. Jullie eerste adres voor het voorgerecht is:',
+    'Hallo [namen],\n\n🎉 De avond staat op het punt te beginnen. Jullie worden om 18:00 verwacht voor het voorgerecht op:',
   starterToMain:
-    'Hoi [namen]!\n\nWe hopen dat jullie hebben genoten van het voorgerecht. Tijd voor het hoofdgerecht! Jullie volgende adres is:',
+    'Hallo [namen],\n\nWe hopen dat jullie hebben genoten van het voorgerecht. Tijd voor het hoofdgerecht! Jullie worden om 19:15 verwacht op:',
   mainToDessert:
-    'Hoi [namen]!\n\nWe hopen dat jullie hebben genoten van het hoofdgerecht. Tijd voor het nagerecht! Jullie volgende adres is:',
+    'Hallo [namen],\n\nWe hopen dat jullie hebben genoten van het hoofdgerecht. Tijd voor het nagerecht! Jullie worden om 21:00 verwacht op:',
 }
 
 export const DEFAULT_TEMPLATES_EN: CardTemplates = {

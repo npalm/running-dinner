@@ -495,16 +495,18 @@ function MatrixTab({
                 {participants.map((col) => {
                   if (row.id === col.id) {
                     return (
-                      <td key={col.id} className="h-5 w-5 bg-gray-200 dark:bg-gray-700" title="—" />
+                      <td key={col.id} className="h-6 w-6 bg-gray-200 dark:bg-gray-700" title="—" />
                     )
                   }
                   const count = getMeetingCount(row.id, col.id)
                   return (
                     <td
                       key={col.id}
-                      className={`h-5 w-5 border border-white/50 ${cellColor(count)}`}
+                      className={`h-6 w-6 border border-white/50 text-center text-[10px] font-semibold ${cellColor(count)}`}
                       title={`${row.name} ↔ ${col.name}: ${count}×`}
-                    />
+                    >
+                      {count}
+                    </td>
                   )
                 })}
               </tr>
