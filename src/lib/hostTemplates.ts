@@ -1,23 +1,21 @@
 const STORAGE_KEY = 'running-dinner-host-template'
 
-export const DEFAULT_HOST_TEMPLATE = `Hoi [namen]!
+export const DEFAULT_HOST_TEMPLATE = `Hallo [namen],
 
-Super fijn dat je meedoet met het Running Dinner op [datum]! 🎉
-
-Jij gaat deze editie het [gang] [emoji] maken. Je krijgt [aantal] [gasten] om 18:00 op bezoek. Veel plezier met de voorbereidingen!
+Wat leuk dat jullie meedoen aan het Running Dinner op [datum].
+Jullie gaan het [gang] maken en krijgen [aantal] [gasten] op bezoek.
 
 [dieetwensen]
-[gangwens]
+
 [schema]
 
 [dagzelf]
-Veel kookplezier en tot snel!`
+Veel succes en plezier met de voorbereiding van jullie gerecht!`
 
-export const DEFAULT_GUEST_TEMPLATE = `Hoi [namen]!
+export const DEFAULT_GUEST_TEMPLATE = `Hallo [namen],
 
-Super fijn dat je meedoet met het Running Dinner op [datum]! 🎉
-
-Jij hoeft deze editie niet te koken — geniet ervan! 😄
+Wat leuk dat jullie meedoen aan het Running Dinner op [datum].
+Jullie hoeven deze editie niet te koken — geniet ervan!
 
 [schema]
 
@@ -25,11 +23,11 @@ Jij hoeft deze editie niet te koken — geniet ervan! 😄
 Veel plezier en tot snel!`
 
 const DAG_ZELF_NOTE =
-  'Op de dag zelf kun je post verwachten met het adres van je voorgerecht.'
+  'Op de dag zelf kunnen jullie post verwachten met het adres van jullie voorgerecht.'
 
-const EVENT_DATE = 'za 25 mei'
+const EVENT_DATE = 'zaterdag 23 mei'
 
-const EVENT_SCHEMA = `Het schema voor de avond:
+const EVENT_SCHEMA = `Het schema voor de avond:\n
 🕕 18:00 Voorgerecht
 🔀 19:00 Wisselen van adres
 🕖 19:15 Hoofdgerecht
@@ -62,11 +60,11 @@ export function applyHostTemplate(
   const guestWord = guestCount === 1 ? 'gast' : 'gasten'
   const dietBlock =
     dietaryWishes.length > 0
-      ? `Let op de volgende dieetwensen van je gasten:\n\n${dietaryWishes.map((w) => `• ${w}`).join('\n')}`
-      : 'Je gasten hebben geen bijzondere dieetwensen — kook lekker los! 🍳'
+      ? `Let op de volgende dieetwensen van jullie gasten:\n\n${dietaryWishes.map((w) => `• ${w}`).join('\n')}`
+      : ''
   const prefNote = preferenceHonored
     ? ''
-    : 'Helaas was het niet mogelijk om rekening te houden met alle wensen voor gangen. We hopen dat je er toch een mooi gerecht van maakt! 🙏'
+    : 'Helaas was het niet mogelijk om rekening te houden met alle wensen voor gangen. We hopen dat jullie er toch een mooi gerecht van maken!'
 
   return template
     .replace(/\[namen\]/gi, () => hostName)

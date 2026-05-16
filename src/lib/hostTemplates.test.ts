@@ -52,9 +52,9 @@ describe('applyHostTemplate', () => {
     expect(result).toContain('•')
   })
 
-  it('shows no-wishes fallback when empty', () => {
+  it('shows empty string when no dietary wishes', () => {
     const result = applyHostTemplate('[dieetwensen]', 'X', 'H', '🍲', 2, [], false)
-    expect(result).toContain('geen bijzondere dieetwensen')
+    expect(result).toBe('')
   })
 
   it('[dagzelf] is empty for starter host', () => {

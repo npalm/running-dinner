@@ -73,5 +73,12 @@ export async function geocodeAddress(
   const coordinates = parseCentroide(doc.centroide_ll)
   const canonicalAddress = doc.weergavenaam ?? address
 
-  return { address: canonicalAddress, coordinates }
+  // PDOK sometimes returns a street-level match without the house number.
+  // If the original address contains a number but the canonical one doesn't,
+  // keep the original to avoid losing precision.
+  const originalHasNumber = /\d/.test(address)
+  const canonicalHasNumber = /\d/.test(canonicalAddress)
+  const finalAddress = originalHasNumber && !canonicalHasNumber ? address : canonicalAddress
+
+  return { address: finalAddress, coordinates }
 }
