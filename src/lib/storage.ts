@@ -23,7 +23,7 @@ export function loadParticipants(): Participant[] {
   try {
     const raw = localStorage.getItem(KEYS.participants)
     if (!raw) return []
-    return JSON.parse(raw) as Participant[]
+    return (JSON.parse(raw) as Participant[]).map(p => ({ ...p, canCook: p.canCook ?? true }))
   } catch {
     return []
   }
@@ -99,7 +99,7 @@ export async function importData(
     throw new Error('Invalid file format: missing participants array')
   }
   return {
-    participants: parsed.participants,
+    participants: parsed.participants.map((p: Participant) => ({ ...p, canCook: p.canCook ?? true })),
     schedule: parsed.schedule ?? null,
   }
 }

@@ -10,6 +10,7 @@ function makeParticipant(id: string, lat: number, lng: number): Participant {
     address: `Street ${id}`,
     coordinates: { lat, lng },
     preference: null,
+    canCook: true,
   }
 }
 

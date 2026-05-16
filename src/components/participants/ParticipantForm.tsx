@@ -14,10 +14,11 @@ interface ParticipantFormProps {
 
 interface FormState {
   name: string
-  count: 1 | 2
+  count: 1 | 2 | 3
   address: string
   coordinates: Participant['coordinates']
   preference: CookingPreference
+  canCook: boolean
   dietaryWishes: string
   email: string
 }
@@ -31,6 +32,7 @@ export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormPr
     address: initial?.address ?? '',
     coordinates: initial?.coordinates ?? null,
     preference: initial?.preference ?? null,
+    canCook: initial?.canCook ?? true,
     dietaryWishes: initial?.dietaryWishes ?? '',
     email: initial?.email ?? '',
   })
@@ -67,6 +69,7 @@ export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormPr
   const countOptions = [
     { value: '1', label: t('count.one') },
     { value: '2', label: t('count.two') },
+    { value: '3', label: t('count.three') },
   ]
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -77,6 +80,7 @@ export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormPr
       address: form.address,
       coordinates: form.coordinates,
       preference: form.preference,
+      canCook: form.canCook,
       dietaryWishes: form.dietaryWishes || undefined,
       email: form.email || undefined,
     })
@@ -95,7 +99,7 @@ export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormPr
         value={String(form.count)}
         options={countOptions}
         onChange={(e) =>
-          setForm((prev) => ({ ...prev, count: Number(e.target.value) as 1 | 2 }))
+          setForm((prev) => ({ ...prev, count: Number(e.target.value) as 1 | 2 | 3 }))
         }
       />
       <Input
@@ -121,6 +125,18 @@ export function ParticipantForm({ initial, onSave, onCancel }: ParticipantFormPr
           }))
         }
       />
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="canCook"
+          checked={!form.canCook}
+          onChange={(e) => setForm((prev) => ({ ...prev, canCook: !e.target.checked }))}
+          className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-400"
+        />
+        <label htmlFor="canCook" className="text-sm text-gray-700 dark:text-gray-300">
+          {t('participants.cannotCook')}
+        </label>
+      </div>
       <div className="flex flex-col gap-1">
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           {t('participants.dietaryWishes')}

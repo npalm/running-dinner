@@ -5,6 +5,20 @@ const en = {
     map: 'Map',
     organizer: 'Organizer',
   },
+  settings: {
+    title: 'Settings',
+    strategy: 'Table-size strategy',
+    strategyDescription:
+      'Drag sizes into preferred order. The algorithm picks the best fit for the number of participants.',
+    presets: 'Presets',
+    balanced: 'Balanced',
+    preferSmall: 'Prefer small',
+    preferLarge: 'Prefer large',
+    reset: 'Reset to default',
+    allowVariableTables: 'Allow variable tables per course',
+    allowVariableTablesDescription:
+      'When enabled, courses may have different numbers of tables so every participant can host. Recommended for groups where not all can cook.',
+  },
   participants: {
     title: 'Participants',
     add: 'Add participant',
@@ -29,6 +43,7 @@ const en = {
     geocodeError: 'Address not found',
     addressHint: 'Enter a full address (street, number, city)',
     confirmDelete: 'Are you sure you want to remove this participant?',
+    cannotCook: 'Cannot cook',
   },
   preferences: {
     starter: 'Starter',
@@ -40,6 +55,7 @@ const en = {
   count: {
     one: '1 person',
     two: '2 persons',
+    three: '3 persons',
   },
   schedule: {
     title: 'Schedule',
@@ -92,11 +108,14 @@ const en = {
     cooks: 'Cooks',
     visits: 'Visits',
     tableSize: 'persons',
+    generationWarnings: 'Generation notes:',
+    validationWarnings: 'Validation warnings:',
     insights: 'Schedule notes',
     nonCooks: 'Not cooking',
     preferenceNotMet: 'Preference not met',
     wanted: 'Wanted',
     got: 'Assigned',
+    cannotCook: 'Cannot cook',
   },
   map: {
     title: 'Map',
@@ -187,6 +206,32 @@ const en = {
     hostCardsDesc: 'One card per host address. Shows the course and dietary wishes of guests (no names).',
     sectionTemplates: 'Message templates',
     sectionExport: 'Export',
+    exportScheduleCsv: 'Export schedule as CSV',
+    exportParticipantsCsv: 'Export participants as CSV',
+  },
+  csv: {
+    importTitle: 'Import participants via CSV',
+    formatHint: 'Expected column order (with header row, comma or semicolon as delimiter):',
+    uploadFile: 'Upload file',
+    orPasteBelow: 'or paste below',
+    parseButton: 'Process CSV',
+    errors: '{{count}} row(s) with errors:',
+    validRows: '{{count}} valid participant(s) found:',
+    noRows: 'No valid rows found.',
+    confirmImport: 'Import {{count}} participant(s)',
+    importButton: 'Import CSV',
+  },
+  stats: {
+    title: '🚶 Walking distances (estimate)',
+    average: 'Average',
+    max: 'Longest',
+    min: 'Shortest',
+    homeToStarter: 'Home → Starter',
+    starterToMain: 'Starter → Main',
+    mainToDessert: 'Main → Dessert',
+    total: 'Total',
+    longestWalker: 'Longest walker',
+    disclaimer: 'Straight-line distances — actual walking route may be longer.',
   },
 } as const
 

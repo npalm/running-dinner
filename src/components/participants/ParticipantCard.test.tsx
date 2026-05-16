@@ -13,6 +13,7 @@ function makeParticipant(overrides: Partial<Participant> = {}): Participant {
     address: 'Cortenbachstraat 92, Eindhoven',
     coordinates: { lat: 51.4595, lng: 5.4827 },
     preference: null,
+    canCook: true,
     ...overrides,
   }
 }

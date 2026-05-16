@@ -7,6 +7,7 @@ interface ParticipantsState {
   participants: Participant[]
   neighborGraph: Map<string, Set<string>>
   add: (p: Omit<Participant, 'id'>) => void
+  addMany: (ps: Omit<Participant, 'id'>[]) => void
   update: (id: string, p: Partial<Omit<Participant, 'id'>>) => void
   remove: (id: string) => void
   setAll: (participants: Participant[]) => void
@@ -26,6 +27,15 @@ export const useParticipantsStore = create<ParticipantsState>((set) => {
       set((state) => {
         const next: Participant = { ...p, id: crypto.randomUUID() }
         const participants = [...state.participants, next]
+        persist(participants)
+        return { participants, neighborGraph: buildNeighborGraph(participants) }
+      })
+    },
+
+    addMany(ps) {
+      set((state) => {
+        const next = ps.map((p) => ({ ...p, id: crypto.randomUUID() }))
+        const participants = [...state.participants, ...next]
         persist(participants)
         return { participants, neighborGraph: buildNeighborGraph(participants) }
       })

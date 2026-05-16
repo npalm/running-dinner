@@ -117,6 +117,7 @@ export interface HostCardData {
   guestCount: number
   dietaryWishes: string[]
   isStarterHost: boolean
+  preferenceHonored: boolean
 }
 
 const COURSE_NL: Record<Course, string> = {
@@ -140,6 +141,8 @@ export function buildHostCards(schedule: Schedule, participants: Participant[]):
       return p ? [p] : []
     })
     const dietaryWishes = guests.filter((g) => g.dietaryWishes).map((g) => g.dietaryWishes!)
+    const pref = host?.preference
+    const preferenceHonored = !pref || pref === 'prefer-not' || pref === table.course
 
     return {
       hostId: table.hostId,
@@ -150,6 +153,7 @@ export function buildHostCards(schedule: Schedule, participants: Participant[]):
       guestCount: guests.reduce((sum, g) => sum + g.count, 0),
       dietaryWishes,
       isStarterHost: starterHostIds.has(table.hostId),
+      preferenceHonored,
     }
   })
 
@@ -165,6 +169,7 @@ export function buildHostCards(schedule: Schedule, participants: Participant[]):
       guestCount: 0,
       dietaryWishes: [],
       isStarterHost: false,
+      preferenceHonored: true,
     }))
 
   return [...hostCards, ...guestCards]

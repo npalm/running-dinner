@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Participant, Schedule } from '../types'
+import type { Participant, Schedule, TableSizeStrategy } from '../types'
 import { loadSchedule, saveSchedule } from '../lib/storage'
 import { generateSchedule, computeMeetings } from '../lib/schedule'
 
@@ -9,9 +9,11 @@ const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 async function generateWithDelay(
   participants: Participant[],
   minMs = 2200,
+  strategy?: TableSizeStrategy,
+  allowVariableTables = true,
 ): Promise<Schedule> {
   const [schedule] = await Promise.all([
-    Promise.resolve(generateSchedule(participants)),
+    Promise.resolve(generateSchedule(participants, strategy, allowVariableTables)),
     sleep(minMs),
   ])
   return schedule
@@ -28,6 +30,8 @@ async function optimizeWithProgress(
   batchSize: number,
   batchDelayMs: number,
   onProgress: (attempt: number, bestScore: number) => void,
+  strategy?: TableSizeStrategy,
+  allowVariableTables = true,
 ): Promise<Schedule> {
   let best: Schedule | null = null
   let bestScore = Infinity
@@ -36,7 +40,7 @@ async function optimizeWithProgress(
   while (done < attempts) {
     const batch = Math.min(batchSize, attempts - done)
     for (let i = 0; i < batch; i++) {
-      const schedule = generateSchedule(participants)
+      const schedule = generateSchedule(participants, strategy, allowVariableTables)
       const { duplicatePairs } = computeMeetings(schedule, participants)
       const score = duplicatePairs.reduce((s, [, , c]) => s + (c - 1), 0)
       if (score < bestScore) {
@@ -59,8 +63,8 @@ interface ScheduleState {
   optimizing: boolean
   optimizeProgress: number   // 0-30 current attempt
   optimizeBestScore: number  // duplicate pairs in best so far
-  generate: (participants: Participant[]) => void
-  optimize: (participants: Participant[]) => void
+  generate: (participants: Participant[], strategy?: TableSizeStrategy, allowVariableTables?: boolean) => void
+  optimize: (participants: Participant[], strategy?: TableSizeStrategy, allowVariableTables?: boolean) => void
   moveGuest: (guestId: string, fromTableId: string, toTableId: string) => void
   setSchedule: (s: Schedule | null) => void
 }
@@ -72,15 +76,15 @@ export const useScheduleStore = create<ScheduleState>((set) => ({
   optimizeProgress: 0,
   optimizeBestScore: Infinity,
 
-  generate(participants) {
+  generate(participants, strategy, allowVariableTables) {
     set({ generating: true })
-    generateWithDelay(participants).then((schedule) => {
+    generateWithDelay(participants, 2200, strategy, allowVariableTables).then((schedule) => {
       saveSchedule(schedule)
       set({ schedule, generating: false })
     })
   },
 
-  optimize(participants) {
+  optimize(participants, strategy, allowVariableTables) {
     const ATTEMPTS = 30
     set({ optimizing: true, optimizeProgress: 0, optimizeBestScore: Infinity })
     optimizeWithProgress(
@@ -89,6 +93,8 @@ export const useScheduleStore = create<ScheduleState>((set) => ({
       3,           // 3 attempts per batch
       300,         // 300ms between batches → ~3 s total
       (attempt, bestScore) => set({ optimizeProgress: attempt, optimizeBestScore: bestScore }),
+      strategy,
+      allowVariableTables,
     ).then((schedule) => {
       saveSchedule(schedule)
       set({ schedule, optimizing: false, optimizeProgress: ATTEMPTS })

@@ -17,7 +17,7 @@ const COURSE_EMOJI: Record<string, string> = {
 
 function buildText(card: HostCardData, template: string): string {
   if (card.course === null) {
-    return applyHostTemplate(DEFAULT_GUEST_TEMPLATE, card.hostName, '', '', 0, [], false)
+    return applyHostTemplate(DEFAULT_GUEST_TEMPLATE, card.hostName, '', '', 0, [], false, true)
   }
   return applyHostTemplate(
     template,
@@ -27,6 +27,7 @@ function buildText(card: HostCardData, template: string): string {
     card.guestCount,
     card.dietaryWishes,
     card.isStarterHost,
+    card.preferenceHonored,
   )
 }
 
@@ -142,8 +143,11 @@ function TemplateSection({ template, onChange }: { template: string; onChange: (
             <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[aantal]</code>{' '}
             <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[gasten]</code>{' '}
             <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[dieetwensen]</code>{' '}
-            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[dagzelf]</code>
-            {' '}— <span className="italic">[dagzelf] is leeg voor voorgerecht-koks, voor anderen staat er het dag-van bericht</span>
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[dagzelf]</code>{' '}
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[datum]</code>{' '}
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[gangwens]</code>{' '}
+            <code className="rounded bg-gray-100 px-1 dark:bg-gray-700">[schema]</code>
+            {' '}— <span className="italic">[dagzelf] is leeg voor voorgerecht-koks, [gangwens] toont een melding als de gangvoorkeur niet gehonoreerd kon worden, [schema] toont het avondschema</span>
           </p>
           <textarea
             rows={10}

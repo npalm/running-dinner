@@ -8,10 +8,11 @@ export interface LatLng {
 export interface Participant {
   id: string
   name: string
-  count: 1 | 2
+  count: 1 | 2 | 3
   address: string
   coordinates: LatLng | null
   preference: CookingPreference
+  canCook: boolean
   dietaryWishes?: string
   email?: string
 }
@@ -28,6 +29,7 @@ export interface Table {
 export interface Schedule {
   tables: Table[]
   generatedAt: string
+  warnings?: string[]
 }
 
 export interface TestDataConfig {
@@ -38,3 +40,5 @@ export interface TestDataConfig {
   baseAddress: string
   baseCoordinates: LatLng
 }
+
+export type TableSizeStrategy = number[]

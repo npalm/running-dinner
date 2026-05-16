@@ -5,6 +5,20 @@ const nl = {
     map: 'Kaart',
     organizer: 'Organisator',
   },
+  settings: {
+    title: 'Instellingen',
+    strategy: 'Tafelgrootte-strategie',
+    strategyDescription:
+      'Versleep de groottes in gewenste volgorde. Het algoritme kiest de beste match voor het aantal deelnemers.',
+    presets: 'Voorinstellingen',
+    balanced: 'Gebalanceerd',
+    preferSmall: 'Voorkeur klein',
+    preferLarge: 'Voorkeur groot',
+    reset: 'Standaard herstellen',
+    allowVariableTables: 'Variabel aantal tafels per gang',
+    allowVariableTablesDescription:
+      'Indien ingeschakeld mogen gangen een verschillend aantal tafels hebben, zodat iedere deelnemer kan koken. Aanbevolen wanneer niet iedereen kan koken.',
+  },
   participants: {
     title: 'Deelnemers',
     add: 'Deelnemer toevoegen',
@@ -29,6 +43,7 @@ const nl = {
     geocodeError: 'Adres niet gevonden',
     addressHint: 'Vul een volledig adres in (straat, huisnummer, woonplaats)',
     confirmDelete: 'Weet je zeker dat je deze deelnemer wilt verwijderen?',
+    cannotCook: 'Kan niet koken',
   },
   preferences: {
     starter: 'Voorgerecht',
@@ -40,6 +55,7 @@ const nl = {
   count: {
     one: '1 persoon',
     two: '2 personen',
+    three: '3 personen',
   },
   schedule: {
     title: 'Indeling',
@@ -92,11 +108,14 @@ const nl = {
     cooks: 'Kookt',
     visits: 'Bezoekt',
     tableSize: 'personen',
+    generationWarnings: 'Generatie opmerkingen:',
+    validationWarnings: 'Validatie waarschuwingen:',
     insights: 'Opmerkingen indeling',
     nonCooks: 'Kookt niet',
     preferenceNotMet: 'Voorkeur niet gehaald',
     wanted: 'Wens',
     got: 'Toegewezen',
+    cannotCook: 'Kan niet koken',
   },
   map: {
     title: 'Kaart',
@@ -187,6 +206,32 @@ const nl = {
     hostCardsDesc: 'Eén kaartje per kookadres. Vermeldt de gang en dieetwensen van de gasten (geen namen).',
     sectionTemplates: 'Berichtteksten',
     sectionExport: 'Exporteren',
+    exportScheduleCsv: 'Exporteer indeling als CSV',
+    exportParticipantsCsv: 'Exporteer deelnemers als CSV',
+  },
+  csv: {
+    importTitle: 'Deelnemers importeren via CSV',
+    formatHint: 'Verwacht kolomvolgorde (met kopregel, komma of puntkomma als scheidingsteken):',
+    uploadFile: 'Bestand uploaden',
+    orPasteBelow: 'of plak hieronder',
+    parseButton: 'Verwerk CSV',
+    errors: '{{count}} rij(en) met fouten:',
+    validRows: '{{count}} geldige deelnemer(s) gevonden:',
+    noRows: 'Geen geldige rijen gevonden.',
+    confirmImport: '{{count}} deelnemer(s) importeren',
+    importButton: 'CSV importeren',
+  },
+  stats: {
+    title: '🚶 Loopafstanden (schatting)',
+    average: 'Gemiddeld',
+    max: 'Langst',
+    min: 'Kortst',
+    homeToStarter: 'Thuis → Voorgerecht',
+    starterToMain: 'Voorgerecht → Hoofdgerecht',
+    mainToDessert: 'Hoofdgerecht → Nagerecht',
+    total: 'Totaal',
+    longestWalker: 'Langste wandelaar',
+    disclaimer: 'Luchtlijnafstanden — werkelijke looproute kan langer zijn.',
   },
 } as const
 

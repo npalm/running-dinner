@@ -1,10 +1,13 @@
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useParticipantsStore } from '../../store/participants'
+import { StrategySettingsModal } from '../settings/StrategySettingsModal'
 
 export function Navigation() {
   const { t } = useTranslation()
   const participants = useParticipantsStore((s) => s.participants)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     [
@@ -38,7 +41,17 @@ export function Navigation() {
           <span>📄</span>
           <span>{t('nav.organizer')}</span>
         </NavLink>
+        <div className="ml-auto flex items-center">
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+            aria-label={t('settings.title')}
+          >
+            ⚙️
+          </button>
+        </div>
       </div>
+      <StrategySettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </nav>
   )
 }
