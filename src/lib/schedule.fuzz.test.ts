@@ -23,7 +23,7 @@ const participantArb: fc.Arbitrary<Participant> = fc.record({
   address: fc.string({ minLength: 1 }),
   coordinates: fc.option(coordArb, { nil: null }),
   preference: preferenceArb,
-  canCook: fc.boolean(),
+  canCook: fc.oneof({ weight: 4, arbitrary: fc.constant(true) }, { weight: 1, arbitrary: fc.constant(false) }),
   dietaryWishes: fc.option(fc.string(), { nil: undefined }),
   email: fc.option(fc.emailAddress(), { nil: undefined }),
 })
